@@ -1,0 +1,363 @@
+syntax = "proto3";
+package schema;
+
+option go_package = "github.com/jasonKoogler/gauth/api/grpc/proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+service SchemaRegistry {
+  // Schema Management
+  rpc CreateSchema(CreateSchemaRequest) returns (SchemaResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/schemas"
+      body: "*"
+    };
+  }
+  
+  rpc GetSchema(GetSchemaRequest) returns (SchemaResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/schemas/{service_name}/{name}/{version}"
+    };
+  }
+  
+  rpc UpdateSchema(UpdateSchemaRequest) returns (SchemaResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/schemas/{service_name}/{name}/{version}"
+      body: "*"
+    };
+  }
+  
+  rpc DeleteSchema(DeleteSchemaRequest) returns (DeleteSchemaResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/schemas/{service_name}/{name}/{version}"
+    };
+  }
+  
+  rpc ListSchemas(ListSchemasRequest) returns (ListSchemasResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/schemas"
+    };
+  }
+  
+  // Bundle Management
+  rpc CreateBundle(CreateBundleRequest) returns (BundleResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/bundles/{service_name}/{version}"
+      body: "*"
+    };
+  }
+  
+  rpc GetBundle(GetBundleRequest) returns (BundleResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/bundles/{service_name}/{version}"
+    };
+  }
+  
+  rpc ListBundles(ListBundlesRequest) returns (ListBundlesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/bundles"
+    };
+  }
+  
+  // Service Registration
+  rpc RegisterService(RegisterServiceRequest) returns (RegisterServiceResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/services/register"
+      body: "*"
+    };
+  }
+  
+  rpc DeregisterService(DeregisterServiceRequest) returns (DeregisterServiceResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/services/{service_id}"
+    };
+  }
+  
+  rpc ServiceHeartbeat(ServiceHeartbeatRequest) returns (ServiceHeartbeatResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/services/heartbeat"
+      body: "*"
+    };
+  }
+  
+  rpc ListServices(ListServicesRequest) returns (ListServicesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/services"
+    };
+  }
+  
+  // Compatibility Testing
+  rpc CheckCompatibility(CheckCompatibilityRequest) returns (CheckCompatibilityResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/compatibility/check"
+      body: "*"
+    };
+  }
+  
+  // Proto Compilation
+  rpc CompileProto(CompileProtoRequest) returns (CompileProtoResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/compile"
+      body: "*"
+    };
+  }
+  
+  // Watch for changes
+  rpc WatchSchemas(WatchSchemasRequest) returns (stream SchemaEvent) {}
+  rpc WatchServices(WatchServicesRequest) returns (stream ServiceEvent) {}
+}
+
+// Schema Management Messages
+
+message CreateSchemaRequest {
+  string service_name = 1;
+  string name = 2;
+  string version = 3;
+  SchemaType schema_type = 4;
+  bytes content = 5;
+  repeated SchemaDependency dependencies = 6;
+  SchemaMetadata metadata = 7;
+}
+
+message GetSchemaRequest {
+  string service_name = 1;
+  string name = 2;
+  string version = 3;
+}
+
+message UpdateSchemaRequest {
+  string service_name = 1;
+  string name = 2;
+  string version = 3;
+  bytes content = 4;
+  repeated SchemaDependency dependencies = 5;
+  SchemaMetadata metadata = 6;
+}
+
+message DeleteSchemaRequest {
+  string service_name = 1;
+  string name = 2;
+  string version = 3;
+}
+
+message DeleteSchemaResponse {
+  bool success = 1;
+}
+
+message ListSchemasRequest {
+  string service_name = 1;
+  string name = 2;
+  string version = 3;
+  SchemaType schema_type = 4;
+  int32 page = 5;
+  int32 page_size = 6;
+}
+
+message ListSchemasResponse {
+  repeated SchemaResponse schemas = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message SchemaResponse {
+  string id = 1;
+  string service_name = 2;
+  string name = 3;
+  string version = 4;
+  SchemaType schema_type = 5;
+  bytes content = 6;
+  repeated SchemaDependency dependencies = 7;
+  SchemaMetadata metadata = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// Bundle Management Messages
+
+message CreateBundleRequest {
+  string service_name = 1;
+  string version = 2;
+  repeated string schema_ids = 3;
+}
+
+message GetBundleRequest {
+  string service_name = 1;
+  string version = 2;
+}
+
+message ListBundlesRequest {
+  string service_name = 1;
+  string version = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ListBundlesResponse {
+  repeated BundleResponse bundles = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message BundleResponse {
+  string id = 1;
+  string service_name = 2;
+  string version = 3;
+  repeated string schema_ids = 4;
+  bool is_complete = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+// Service Registration Messages
+
+message RegisterServiceRequest {
+  string service_id = 1;
+  string service_name = 2;
+  string version = 3;
+  string schema_version = 4;
+  string address = 5;
+  int32 port = 6;
+  map<string, string> metadata = 7;
+}
+
+message RegisterServiceResponse {
+  string service_id = 1;
+  google.protobuf.Timestamp registered_at = 2;
+}
+
+message DeregisterServiceRequest {
+  string service_id = 1;
+}
+
+message DeregisterServiceResponse {
+  bool success = 1;
+}
+
+message ServiceHeartbeatRequest {
+  string service_id = 1;
+  string status = 2;
+}
+
+message ServiceHeartbeatResponse {
+  bool success = 1;
+  google.protobuf.Timestamp timestamp = 2;
+}
+
+message ListServicesRequest {
+  string service_name = 1;
+  string version = 2;
+  string status = 3;
+  int32 page = 4;
+  int32 page_size = 5;
+}
+
+message ListServicesResponse {
+  repeated ServiceResponse services = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ServiceResponse {
+  string id = 1;
+  string service_name = 2;
+  string version = 3;
+  string schema_version = 4;
+  string address = 5;
+  int32 port = 6;
+  map<string, string> metadata = 7;
+  string status = 8;
+  google.protobuf.Timestamp last_heartbeat = 9;
+  google.protobuf.Timestamp registered_at = 10;
+}
+
+// Compatibility Testing Messages
+
+message CheckCompatibilityRequest {
+  string service_name = 1;
+  string name = 2;
+  string old_version = 3;
+  string new_version = 4;
+  bytes new_content = 5; // If the new version is not yet registered
+}
+
+message CheckCompatibilityResponse {
+  bool is_compatible = 1;
+  repeated string compatibility_issues = 2;
+}
+
+// Proto Compilation Messages
+
+message CompileProtoRequest {
+  string service_name = 1;
+  string version = 2;
+  repeated string languages = 3; // e.g., "go", "java", "python"
+  map<string, string> options = 4; // Language-specific options
+}
+
+message CompileProtoResponse {
+  bool success = 1;
+  map<string, bytes> compiled_artifacts = 2; // Language -> compiled code
+  repeated string errors = 3;
+}
+
+// Watch Messages
+
+message WatchSchemasRequest {
+  string service_name = 1;
+}
+
+message WatchServicesRequest {
+  string service_name = 1;
+}
+
+message SchemaEvent {
+  enum EventType {
+    CREATED = 0;
+    UPDATED = 1;
+    DELETED = 2;
+  }
+  
+  EventType event_type = 1;
+  SchemaResponse schema = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+message ServiceEvent {
+  enum EventType {
+    REGISTERED = 0;
+    UPDATED = 1;
+    DEREGISTERED = 2;
+    STATUS_CHANGED = 3;
+  }
+  
+  EventType event_type = 1;
+  ServiceResponse service = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+// Common Types
+
+enum SchemaType {
+  PROTOBUF = 0;
+  OPENAPI = 1;
+  GRAPHQL = 2;
+}
+
+message SchemaDependency {
+  string service_name = 1;
+  string name = 2;
+  string version = 3;
+  bool required = 4;
+}
+
+message SchemaMetadata {
+  string author = 1;
+  string description = 2;
+  map<string, string> labels = 3;
+  bool is_deprecated = 4;
+  string successor_name = 5;
+}

@@ -1,0 +1,19 @@
+# Build output
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Environment
+.env
+
+# OS
+.DS_Store
+
+# Go workspace sum
+go.work.sum
+
+# Third party (downloaded at build time)
+third_party/

@@ -1,0 +1,118 @@
+services:
+  auth-api:
+    build:
+      context: ../../../
+      dockerfile: docker/auth/dev/Dockerfile
+    ports:
+      - "8080:8080"
+      - "40000:40000" # For delve debugging
+    environment:
+      - ENV=development
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_USERNAME=${REDIS_USERNAME}
+    env_file:
+      - ../../../.env
+    volumes:
+      - ../../../cmd/auth/:/app/cmd
+      - ../../../internal/auth:/app/internal/auth
+      - ../../../go.mod:/app/go.mod
+      - ../../../go.sum:/app/go.sum
+      - ../../../.air.toml:/app/.air.toml:ro
+      - ../../../.env:/app/.env:ro
+    depends_on:
+      - postgres
+      - redis
+      - opa
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  opa:
+    image: openpolicyagent/opa:latest
+    ports:
+      - "8181:8181"
+    volumes:
+      - ./policies:/policies
+    command: ["run", "--server", "--addr", ":8181", "/policies"]
+
+  postgres:
+    image: postgres:16
+    env_file:
+      - ../../../.env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    user: "999"
+    restart: always
+    shm_size: 128mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    networks:
+      - app-network
+
+  redis:
+    image: docker.io/bitnami/redis:7.2
+    env_file:
+      - ../../../.env
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/bitnami/redis/data
+    user: "1001"
+    networks:
+      - app-network
+    # command: redis-server --appendonly yes
+
+  migrate:
+    image: migrate/migrate
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+    entrypoint:
+      - migrate
+      - -path
+      - ../../migrations
+      - -database
+      - postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      - up
+    volumes:
+      - ../../../migrations:/migrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pg-data:
+    name: pg-data
+  redis-data:
+    name: redis-data

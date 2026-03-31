@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package aegispb;
+
+option go_package = "github.com/jasonKoogler/aegis/api/grpc/aegispb";
+
+service AegisAuth {
+    rpc SyncAuthData(SyncRequest) returns (stream AuthDataEvent);
+    rpc SyncPolicies(SyncRequest) returns (stream PolicyEvent);
+    rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
+    rpc ValidateAPIKey(ValidateAPIKeyRequest) returns (ValidateAPIKeyResponse);
+}
+
+message SyncRequest {
+    string last_version = 1;
+}
+
+message AuthDataEvent {
+    string version = 1;
+    oneof event {
+        UserRolesSnapshot user_roles = 2;
+        TokenRevoked token_revoked = 3;
+        SyncComplete sync_complete = 4;
+    }
+}
+
+message UserRolesSnapshot {
+    string user_id = 1;
+    string tenant_id = 2;
+    repeated string roles = 3;
+    repeated string permissions = 4;
+}
+
+message TokenRevoked {
+    string jti = 1;
+    int64 expires_at = 2;
+}
+
+message SyncComplete {}
+
+message PolicyEvent {
+    string version = 1;
+    map<string, string> policies = 2;
+}
+
+message CheckPermissionRequest {
+    string user_id = 1;
+    string action = 2;
+    string resource_type = 3;
+    string resource_id = 4;
+    string tenant_id = 5;
+}
+
+message CheckPermissionResponse {
+    bool allowed = 1;
+    string reason = 2;
+}
+
+message ValidateAPIKeyRequest {
+    string api_key = 1;
+}
+
+message ValidateAPIKeyResponse {
+    bool valid = 1;
+    string owner_id = 2;
+    string tenant_id = 3;
+    repeated string scopes = 4;
+}

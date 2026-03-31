@@ -1,0 +1,414 @@
+basePath: /
+definitions:
+  APIError:
+    properties:
+      message:
+        example: Invalid JSON request
+        type: string
+      slug:
+        example: invalid-json
+        type: string
+    type: object
+  AuthProvider:
+    enum:
+    - password
+    - google
+    type: string
+    x-enum-varnames:
+    - AuthProviderPassword
+    - AuthProviderGoogle
+  PasswordLoginRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: secretpass123
+        type: string
+    type: object
+  RoleMap:
+    additionalProperties:
+      $ref: '#/definitions/UserRole'
+    type: object
+  TokenPair:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  UpdateUserRequest:
+    properties:
+      authProvider:
+        example: google
+        type: string
+      avatarURL:
+        example: https://example.com/avatar.jpg
+        type: string
+      email:
+        example: updated@example.com
+        type: string
+      firstName:
+        example: Jane
+        type: string
+      lastLoginDate:
+        type: string
+      lastName:
+        example: Smith
+        type: string
+      phone:
+        example: "+1987654321"
+        type: string
+      status:
+        enum:
+        - active
+        - inactive
+        - other
+        example: active
+        type: string
+    type: object
+  User:
+    properties:
+      avatar_url:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_login_date:
+        type: string
+      last_name:
+        type: string
+      phone:
+        type: string
+      provider:
+        $ref: '#/definitions/AuthProvider'
+      provider_user_id:
+        description: only used for social login providers
+        type: string
+      roles:
+        $ref: '#/definitions/RoleMap'
+      status:
+        $ref: '#/definitions/UserStatus'
+      updated_at:
+        type: string
+    type: object
+  UserRegistrationRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      firstName:
+        example: John
+        type: string
+      lastName:
+        example: Doe
+        type: string
+      password:
+        example: secretpass123
+        type: string
+      phone:
+        example: "+1234567890"
+        type: string
+    type: object
+  UserRole:
+    enum:
+    - admin
+    - editor
+    - viewer
+    type: string
+    x-enum-varnames:
+    - RoleAdmin
+    - RoleEditor
+    - RoleViewer
+  UserStatus:
+    enum:
+    - active
+    - inactive
+    - locked
+    - deleted
+    type: string
+    x-enum-varnames:
+    - UserStatusActive
+    - UserStatusInactive
+    - UserStatusLocked
+    - UserStatusDeleted
+host: localhost:8080
+info:
+  contact: {}
+  description: Authentication and user management service with JWT (Ed25519/EdDSA),
+    OAuth, and RBAC.
+  title: Aegis Auth Service API
+  version: "1.0"
+paths:
+  /auth/{provider}:
+    get:
+      description: Redirects the user to the specified OAuth provider's login page.
+      parameters:
+      - description: OAuth provider name (e.g. google, github)
+        in: path
+        name: provider
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: authURL and state
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      summary: Initiate social login
+      tags:
+      - Auth
+  /auth/{provider}/callback:
+    get:
+      description: Processes the OAuth callback from the provider and issues tokens.
+      parameters:
+      - description: OAuth provider name
+        in: path
+        name: provider
+        required: true
+        type: string
+      - description: Authorization code from provider
+        in: query
+        name: code
+        required: true
+        type: string
+      - description: OAuth state parameter
+        in: query
+        name: state
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tokens set in response headers
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      summary: Handle social login callback
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user with email and password credentials.
+      parameters:
+      - description: Login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/PasswordLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tokens set in response headers
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/APIError'
+      summary: Login with password
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      description: Logs the authenticated user out and invalidates their session.
+      responses:
+        "302":
+          description: Redirect to home
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Logout
+      tags:
+      - Auth
+  /auth/refresh:
+    post:
+      description: Issues a new access/refresh token pair using the current refresh
+        token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/TokenPair'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/APIError'
+      summary: Refresh tokens
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user account with password credentials and returns
+        tokens.
+      parameters:
+      - description: Registration details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserRegistrationRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Tokens set in response headers
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      summary: Register a new user
+      tags:
+      - Auth
+  /users:
+    get:
+      description: Returns a paginated list of all users.
+      parameters:
+      - description: Page number (default 1)
+        in: query
+        name: page
+        type: integer
+      - description: Page size (default 10)
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/User'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: List users
+      tags:
+      - Users
+  /users/{userID}:
+    get:
+      description: Returns a single user by their unique identifier.
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Updates user fields for the given user ID.
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Update user by ID
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

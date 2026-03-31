@@ -1,0 +1,921 @@
+basePath: /
+definitions:
+  APIError:
+    properties:
+      message:
+        example: Invalid JSON request
+        type: string
+      slug:
+        example: invalid-json
+        type: string
+    type: object
+  ApiKeyCreateRequest:
+    properties:
+      expires_in_days:
+        example: 30
+        type: integer
+      name:
+        example: my-api-key
+        type: string
+      scopes:
+        example:
+        - read:users
+        - write:users
+        items:
+          type: string
+        type: array
+      tenant_id:
+        type: string
+      user_id:
+        type: string
+    type: object
+  ApiKeyCreateResponse:
+    properties:
+      created_at:
+        type: string
+      expires_at:
+        type: string
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      key_prefix:
+        example: ak_abcdefgh
+        type: string
+      name:
+        example: my-api-key
+        type: string
+      raw_api_key:
+        example: ak_abcdefghijklmnopqrstuvwxyz123456
+        type: string
+      scopes:
+        example:
+        - read:users
+        - write:users
+        items:
+          type: string
+        type: array
+    type: object
+  ApiKeyResponse:
+    properties:
+      created_at:
+        type: string
+      created_ip_address:
+        example: 192.168.1.1
+        type: string
+      expires_at:
+        type: string
+      id:
+        example: 550e8400-e29b-41d4-a716-446655440000
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      key_prefix:
+        example: ak_abcdefgh
+        type: string
+      last_used_at:
+        type: string
+      last_used_ip_address:
+        example: 192.168.1.1
+        type: string
+      name:
+        example: my-api-key
+        type: string
+      scopes:
+        example:
+        - read:users
+        - write:users
+        items:
+          type: string
+        type: array
+      tenant_id:
+        example: 550e8400-e29b-41d4-a716-446655440001
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        example: 550e8400-e29b-41d4-a716-446655440002
+        type: string
+    type: object
+  ApiKeyValidateRequest:
+    properties:
+      api_key:
+        example: ak_abc123...
+        type: string
+    type: object
+  AuditLog:
+    properties:
+      actor_id:
+        description: ActorID is the unique identifier of the actor who performed the
+          action such as a user or api key (usr_1234567890, apk_1234567890)
+        type: string
+      actor_type:
+        description: ActorType identifies the type of entity that performed the action
+          (e.g., "user", "system", "service")
+        type: string
+      created_at:
+        description: CreatedAt is the timestamp when the audit log entry was created
+        type: string
+      event_data:
+        description: EventData stores additional contextual information about the
+          event in a flexible format
+      event_type:
+        description: EventType categorizes the type of action performed (e.g., "login",
+          "create", "update", "delete")
+        type: string
+      id:
+        description: ID is the unique identifier for the audit log entry with the
+          "aud" prefix
+      ip_address:
+        description: IPAddress stores the IP address from which the action was performed
+        items:
+          type: integer
+        type: array
+      resource_id:
+        description: ResourceID is the unique identifier of the resource that was
+          affected with the "res" prefix
+      resource_type:
+        description: ResourceType identifies the type of resource that was affected
+          (e.g., "user", "apikey", "service")
+        type: string
+      tenant_id:
+        description: TenantID is the unique identifier of the tenant where the action
+          occurred with the "tnt" prefix
+      user_agent:
+        description: UserAgent contains the user agent string from the client that
+          performed the action
+        type: string
+    type: object
+  AuditLogAggregate:
+    properties:
+      count:
+        type: integer
+      group_key:
+        type: string
+    type: object
+  AuditLogAggregateResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/AuditLogAggregate'
+        type: array
+      end_date:
+        type: string
+      group_by:
+        type: string
+      start_date:
+        type: string
+      total_count:
+        type: integer
+    type: object
+  AuditLogListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/AuditLog'
+        type: array
+      pagination:
+        $ref: '#/definitions/PaginationMetadata'
+    type: object
+  Duration:
+    enum:
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
+    format: int64
+    type: integer
+    x-enum-varnames:
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
+  PaginationMetadata:
+    properties:
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total_items:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  RouteConfig:
+    properties:
+      method:
+        description: HTTP method (GET, POST, etc.), or * for any
+        type: string
+      path:
+        description: Path pattern (e.g., "/api/users/:id")
+        type: string
+      priority:
+        description: Higher priority routes are matched first
+        type: integer
+      public:
+        description: Whether this route is public (no auth required)
+        type: boolean
+      requiredScopes:
+        description: Required permission scopes (if any)
+        items:
+          type: string
+        type: array
+    type: object
+  RouteMetadata:
+    properties:
+      method:
+        description: HTTP method (GET, POST, etc.)
+        type: string
+      path:
+        description: URL path pattern
+        type: string
+      priority:
+        description: Higher priority routes are matched first
+        type: integer
+      public:
+        description: true = no auth required, false = auth required
+        type: boolean
+      required_scopes:
+        description: Required permission scopes (if any)
+        items:
+          type: string
+        type: array
+      service_id:
+        description: ID of the service that handles this route
+        type: string
+      service_name:
+        description: Name of the service
+        type: string
+      service_url:
+        description: Base URL of the service
+        type: string
+      tags:
+        additionalProperties:
+          type: string
+        description: Additional metadata tags
+        type: object
+    type: object
+  ServiceConfig:
+    properties:
+      allowedMethods:
+        items:
+          type: string
+        type: array
+      allowedRoles:
+        items:
+          type: string
+        type: array
+      healthCheckPath:
+        type: string
+      name:
+        type: string
+      requiresAuth:
+        type: boolean
+      retryCount:
+        type: integer
+      routes:
+        description: Optional custom routes
+        items:
+          $ref: '#/definitions/RouteConfig'
+        type: array
+      timeout:
+        $ref: '#/definitions/Duration'
+      url:
+        type: string
+    type: object
+  UpdateApiKeyMetadataRequest:
+    properties:
+      expires_in_days:
+        example: 90
+        type: integer
+      is_active:
+        example: true
+        type: boolean
+      name:
+        example: updated-key-name
+        type: string
+      scopes:
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API gateway with service routing, audit logging, API key management,
+    and service discovery.
+  title: Prism API Gateway
+  version: "1.0"
+paths:
+  /api/routes:
+    get:
+      description: Get all registered routes, optionally filtered by type (public
+        or protected)
+      parameters:
+      - description: Filter by route type
+        enum:
+        - public
+        - protected
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/RouteMetadata'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: List all routes
+      tags:
+      - routes
+  /api/routes/{service}:
+    get:
+      description: Get all registered routes for a specific service
+      parameters:
+      - description: Service name
+        in: path
+        name: service
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/RouteMetadata'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: List routes for a service
+      tags:
+      - routes
+    post:
+      consumes:
+      - application/json
+      description: Register a new custom route for a specific service
+      parameters:
+      - description: Service name
+        in: path
+        name: service
+        required: true
+        type: string
+      - description: Route configuration
+        in: body
+        name: route
+        required: true
+        schema:
+          $ref: '#/definitions/RouteConfig'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/RouteConfig'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Add a route to a service
+      tags:
+      - routes
+  /api/services:
+    get:
+      description: Get all registered backend services
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ServiceConfig'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: List all services
+      tags:
+      - services
+    post:
+      consumes:
+      - application/json
+      description: Register a new backend service with the gateway
+      parameters:
+      - description: Service configuration
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/ServiceConfig'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/ServiceConfig'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Register a new service
+      tags:
+      - services
+  /api/services/{name}:
+    delete:
+      description: Deregister a service from the gateway
+      parameters:
+      - description: Service name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            properties:
+              status:
+                type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete a service
+      tags:
+      - services
+    get:
+      description: Retrieve configuration for a specific registered service
+      parameters:
+      - description: Service name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceConfig'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Get a service by name
+      tags:
+      - services
+    put:
+      consumes:
+      - application/json
+      description: Update configuration for an existing service
+      parameters:
+      - description: Service name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Updated service configuration
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/ServiceConfig'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ServiceConfig'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Update a service
+      tags:
+      - services
+  /apikey:
+    get:
+      description: Get paginated list of API keys filtered by tenant or user
+      parameters:
+      - description: Filter by tenant ID
+        in: query
+        name: tenant_id
+        type: string
+      - description: Filter by user ID
+        in: query
+        name: user_id
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ApiKeyResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: List API keys
+      tags:
+      - apikey
+    post:
+      consumes:
+      - application/json
+      description: Create a new API key for a tenant or user
+      parameters:
+      - description: API key creation request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/ApiKeyCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/ApiKeyCreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Create API key
+      tags:
+      - apikey
+  /apikey/{apikeyID}:
+    delete:
+      description: Revoke an existing API key by ID
+      parameters:
+      - description: API key ID
+        in: path
+        name: apikeyID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Revoke API key
+      tags:
+      - apikey
+    get:
+      description: Retrieve an API key by ID
+      parameters:
+      - description: API key ID
+        in: path
+        name: apikeyID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ApiKeyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Get API key
+      tags:
+      - apikey
+  /apikey/{apikeyID}/metadata:
+    put:
+      consumes:
+      - application/json
+      description: Update the metadata of an existing API key
+      parameters:
+      - description: API key ID
+        in: path
+        name: apikeyID
+        required: true
+        type: string
+      - description: Metadata update request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateApiKeyMetadataRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ApiKeyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Update API key metadata
+      tags:
+      - apikey
+  /apikey/validate:
+    post:
+      consumes:
+      - application/json
+      description: Validate an API key and return its details if valid
+      parameters:
+      - description: API key validation request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/ApiKeyValidateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ApiKeyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Validate API key
+      tags:
+      - apikey
+  /audit:
+    get:
+      description: Get paginated, filtered list of audit logs
+      parameters:
+      - description: Filter by tenant ID
+        in: query
+        name: tenant_id
+        type: string
+      - description: Filter by user ID
+        in: query
+        name: user_id
+        type: string
+      - description: Filter by event type
+        in: query
+        name: event_type
+        type: string
+      - description: Filter by resource type
+        in: query
+        name: resource_type
+        type: string
+      - description: Filter by resource ID
+        in: query
+        name: resource_id
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      - description: Start date (RFC3339)
+        in: query
+        name: start_date
+        type: string
+      - description: End date (RFC3339)
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/AuditLogListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: List audit logs
+      tags:
+      - audit
+  /audit/{auditID}:
+    get:
+      description: Retrieve a single audit log entry
+      parameters:
+      - description: Audit log ID
+        in: path
+        name: auditID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/AuditLog'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Get audit log by ID
+      tags:
+      - audit
+  /audit/aggregate/{groupBy}:
+    get:
+      description: Group and count audit logs by a specified field
+      parameters:
+      - description: Group by field
+        enum:
+        - event_type
+        - actor_type
+        - tenant
+        in: path
+        name: groupBy
+        required: true
+        type: string
+      - description: Start date (RFC3339)
+        in: query
+        name: start_date
+        type: string
+      - description: End date (RFC3339)
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/AuditLogAggregateResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Aggregate audit logs
+      tags:
+      - audit
+  /audit/export:
+    get:
+      description: Export audit logs as CSV file
+      parameters:
+      - description: Filter by tenant ID
+        in: query
+        name: tenant_id
+        type: string
+      produces:
+      - text/csv
+      responses:
+        "200":
+          description: CSV file download
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/APIError'
+      security:
+      - BearerAuth: []
+      summary: Export audit logs
+      tags:
+      - audit
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
