@@ -3,7 +3,7 @@ package ports
 import (
 	"net/http/httputil"
 
-	"github.com/jasonKoogler/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
 )
 
 type ServiceRegistry interface {

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package aegispb;
 
-option go_package = "github.com/jasonKoogler/aegis/api/grpc/aegispb";
+option go_package = "github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispb";
 
 service AegisAuth {
     rpc SyncAuthData(SyncRequest) returns (stream AuthDataEvent);

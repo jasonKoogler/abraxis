@@ -6,14 +6,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/authz"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/common/redis"
-	"github.com/jasonKoogler/aegis/internal/config"
-	"github.com/jasonKoogler/aegis/internal/domain"
-	aegisgrpc "github.com/jasonKoogler/aegis/internal/grpc"
-	"github.com/jasonKoogler/aegis/internal/ports"
-	"github.com/jasonKoogler/aegis/internal/service"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/authz"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/redis"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
+	aegisgrpc "github.com/jasonKoogler/abraxis/aegis/internal/grpc"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
+	"github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 // AppOption is a functional option for configuring the App

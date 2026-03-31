@@ -3,8 +3,8 @@ package grpc
 import (
 	"context"
 
-	pb "github.com/jasonKoogler/aegis/api/grpc/aegispb"
-	"github.com/jasonKoogler/aegis/internal/common/log"
+	pb "github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispb"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

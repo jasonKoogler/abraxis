@@ -13,15 +13,15 @@ import (
 	"github.com/go-chi/cors"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/common/redis"
-	"github.com/jasonKoogler/prism/internal/config"
-	"github.com/jasonKoogler/prism/internal/domain"
-	"github.com/jasonKoogler/prism/internal/features/auth"
-	"github.com/jasonKoogler/prism/internal/features/auth/adapters/authz"
-	"github.com/jasonKoogler/prism/internal/features/gateway"
-	aegisclient "github.com/jasonKoogler/prism/internal/features/gateway/adapters/aegis"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/redis"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/auth"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/auth/adapters/authz"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/gateway"
+	aegisclient "github.com/jasonKoogler/abraxis/prism/internal/features/gateway/adapters/aegis"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // ReadinessChecker reports whether a subsystem is ready to serve traffic.

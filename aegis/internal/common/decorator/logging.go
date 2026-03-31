@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jasonKoogler/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
 	"go.uber.org/zap/zapcore"
 )
 

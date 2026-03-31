@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/jasonKoogler/aegis/internal/common/api"
-	"github.com/jasonKoogler/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/api"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
 )
 
 func ReqistrationRequestToUserParams(r *http.Request) (*domain.UserCreateParams, error) {

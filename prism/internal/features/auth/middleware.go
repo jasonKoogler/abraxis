@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/jasonKoogler/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
 )
 
 // RevocationChecker checks whether a JWT (identified by its JTI) has been

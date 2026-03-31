@@ -1,4 +1,4 @@
-module github.com/jasonKoogler/authz
+module github.com/jasonKoogler/abraxis/authz
 
 go 1.24.0
 

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth"
 	"golang.org/x/oauth2"
 )
 

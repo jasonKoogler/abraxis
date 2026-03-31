@@ -9,10 +9,10 @@ import (
 
 	"log"
 
-	alog "github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/config"
-	"github.com/jasonKoogler/prism/internal/features/gateway/adapters/circuitbreaker"
-	"github.com/jasonKoogler/prism/internal/ports"
+	alog "github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/gateway/adapters/circuitbreaker"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
 	"github.com/redis/go-redis/v9"

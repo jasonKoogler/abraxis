@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
 )
 
 // ListAuditLogsParamsFromRequest extracts list audit log parameters from the HTTP request query string.

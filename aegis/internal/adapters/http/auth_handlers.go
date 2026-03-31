@@ -4,11 +4,11 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/jasonKoogler/aegis/internal/common/api"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/config"
-	"github.com/jasonKoogler/aegis/internal/domain"
-	"github.com/jasonKoogler/aegis/internal/service"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/api"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 type authHandler struct {

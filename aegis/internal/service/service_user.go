@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jasonKoogler/aegis/internal/common/util"
-	"github.com/jasonKoogler/aegis/internal/domain"
-	"github.com/jasonKoogler/aegis/internal/ports"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/util"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
 )
 
 type UserService struct {

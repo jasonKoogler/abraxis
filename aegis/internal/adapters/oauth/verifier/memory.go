@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth"
 )
 
 type MemoryVerifierStorage struct {

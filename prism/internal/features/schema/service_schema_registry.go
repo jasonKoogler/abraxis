@@ -30,8 +30,8 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
 
-	"github.com/jasonKoogler/prism/internal/ports"
-	pb "github.com/jasonKoogler/prism/internal/ports/proto"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
+	pb "github.com/jasonKoogler/abraxis/prism/internal/ports/proto"
 )
 
 // SchemaManager handles schema synchronization and dynamic service registration

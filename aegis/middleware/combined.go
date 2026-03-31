@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/authz"
-	adapterHTTP "github.com/jasonKoogler/aegis/internal/adapters/http"
-	"github.com/jasonKoogler/aegis/internal/domain"
-	"github.com/jasonKoogler/aegis/internal/service"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/authz"
+	adapterHTTP "github.com/jasonKoogler/abraxis/aegis/internal/adapters/http"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 // CombinedMiddleware provides a unified middleware that handles both authentication and authorization.

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jasonKoogler/authz/types"
+	"github.com/jasonKoogler/abraxis/authz/types"
 	"github.com/redis/go-redis/v9"
 )
 

@@ -9,7 +9,7 @@ import (
 	"time"
 
 	consulapi "github.com/hashicorp/consul/api"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // ConsulDialTimeout is the timeout for connecting to Consul - exported for testing

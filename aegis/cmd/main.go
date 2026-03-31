@@ -3,15 +3,15 @@ package main
 import (
 	"context"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/postgres"
-	"github.com/jasonKoogler/aegis/internal/adapters/ratelimiter"
-	"github.com/jasonKoogler/aegis/internal/app"
-	"github.com/jasonKoogler/aegis/internal/common/db"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/common/redis"
-	"github.com/jasonKoogler/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/postgres"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/ratelimiter"
+	"github.com/jasonKoogler/abraxis/aegis/internal/app"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/db"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/redis"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
 
-	_ "github.com/jasonKoogler/aegis/docs" // swagger docs
+	_ "github.com/jasonKoogler/abraxis/aegis/docs" // swagger docs
 )
 
 // @title           Aegis Auth Service API

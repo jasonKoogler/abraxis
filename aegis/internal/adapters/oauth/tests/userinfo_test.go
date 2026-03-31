@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 )

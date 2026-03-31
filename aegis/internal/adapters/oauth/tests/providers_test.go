@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth"
-	"github.com/jasonKoogler/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 )

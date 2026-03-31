@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/jasonKoogler/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/facebook"
 	"golang.org/x/oauth2/google"

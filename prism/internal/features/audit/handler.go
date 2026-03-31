@@ -7,13 +7,13 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/jasonKoogler/prism/internal/common/api"
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/config"
-	"github.com/jasonKoogler/prism/internal/domain"
-	"github.com/jasonKoogler/prism/internal/domain/prefixid"
-	"github.com/jasonKoogler/prism/internal/features/audit/dto"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/api"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain/prefixid"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/audit/dto"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 type auditHandler struct {

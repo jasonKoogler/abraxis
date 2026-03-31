@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
 )
 
 type PostgresPool struct {

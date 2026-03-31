@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/jasonKoogler/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
 	"golang.org/x/oauth2"
 )
 

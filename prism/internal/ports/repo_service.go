@@ -1,6 +1,6 @@
 package ports
 
-import "github.com/jasonKoogler/prism/internal/config"
+import "github.com/jasonKoogler/abraxis/prism/internal/config"
 
 type ServiceRepository interface {
 	Load() ([]config.ServiceConfig, error)

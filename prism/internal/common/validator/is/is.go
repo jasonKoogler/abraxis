@@ -9,7 +9,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/jasonKoogler/prism/internal/common/util"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/util"
 )
 
 // String validators

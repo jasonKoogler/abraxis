@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jasonKoogler/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
 )
 
 // ApiKeyRepository defines the interface for API key operations

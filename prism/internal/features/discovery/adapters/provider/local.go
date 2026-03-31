@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // LocalDiscovery provides a simple in-memory service discovery implementation

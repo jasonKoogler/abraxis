@@ -7,11 +7,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	pb "github.com/jasonKoogler/aegis/api/grpc/aegispb"
-	"github.com/jasonKoogler/aegis/internal/adapters/authz"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/ports"
-	"github.com/jasonKoogler/aegis/internal/service"
+	pb "github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispb"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/authz"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
+	"github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 // AegisAuthServer implements the aegispb.AegisAuthServer interface.

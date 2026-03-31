@@ -9,7 +9,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/jasonKoogler/aegis/internal/common/util"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/util"
 )
 
 // String validators

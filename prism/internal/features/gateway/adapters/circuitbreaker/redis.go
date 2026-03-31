@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/config"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 	"github.com/redis/go-redis/v9"
 )
 

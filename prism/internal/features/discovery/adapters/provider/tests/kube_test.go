@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/jasonKoogler/prism/internal/features/discovery/adapters/provider"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/discovery/adapters/provider"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"

@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/jasonKoogler/authz"
+	"github.com/jasonKoogler/abraxis/authz"
 )
 
 func main() {

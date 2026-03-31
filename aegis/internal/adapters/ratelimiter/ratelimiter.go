@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jasonKoogler/aegis/internal/config"
-	"github.com/jasonKoogler/aegis/internal/ports"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/redis/go-redis/v9"
 	"golang.org/x/time/rate"

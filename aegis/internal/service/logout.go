@@ -9,9 +9,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/common/util"
-	"github.com/jasonKoogler/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/util"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
 )
 
 // Logout logs the user out by invalidating the session and performing

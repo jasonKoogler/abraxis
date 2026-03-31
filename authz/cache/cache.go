@@ -4,7 +4,7 @@ package cache
 import (
 	"time"
 
-	"github.com/jasonKoogler/authz/types"
+	"github.com/jasonKoogler/abraxis/authz/types"
 )
 
 // CacheConfig contains configuration for the policy evaluation cache

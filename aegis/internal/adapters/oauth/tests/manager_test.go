@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth"
-	"github.com/jasonKoogler/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"golang.org/x/oauth2"

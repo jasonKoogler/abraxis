@@ -6,11 +6,11 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/jasonKoogler/aegis/internal/common/api"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/config"
-	_ "github.com/jasonKoogler/aegis/internal/domain" // swagger type resolution
-	"github.com/jasonKoogler/aegis/internal/service"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/api"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
+	_ "github.com/jasonKoogler/abraxis/aegis/internal/domain" // swagger type resolution
+	"github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 type Server struct {

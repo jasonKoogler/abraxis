@@ -8,14 +8,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth"
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth/verifier"
-	"github.com/jasonKoogler/aegis/internal/adapters/session"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/common/redis"
-	"github.com/jasonKoogler/aegis/internal/config"
-	"github.com/jasonKoogler/aegis/internal/domain"
-	"github.com/jasonKoogler/aegis/internal/ports"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth/verifier"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/session"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/redis"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
 	"golang.org/x/oauth2"
 )
 

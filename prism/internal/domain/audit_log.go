@@ -5,8 +5,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/common/id"
-	"github.com/jasonKoogler/prism/internal/domain/prefixid"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/id"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain/prefixid"
 )
 
 // AuditLog represents a security audit log entry

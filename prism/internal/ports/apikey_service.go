@@ -3,7 +3,7 @@ package ports
 import (
 	"context"
 
-	"github.com/jasonKoogler/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
 )
 
 type ApiKeyService interface {

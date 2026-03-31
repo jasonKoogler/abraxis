@@ -3,7 +3,7 @@ package tests
 import (
 	"context"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth"
 	"github.com/stretchr/testify/mock"
 	"golang.org/x/oauth2"
 )

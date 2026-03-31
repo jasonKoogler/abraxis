@@ -3,7 +3,7 @@ package ports
 import (
 	"context"
 
-	"github.com/jasonKoogler/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
 )
 
 type UserService interface {

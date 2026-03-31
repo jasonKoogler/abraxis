@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jasonKoogler/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
 )
 
 // Example shows how to use the Authz adapter

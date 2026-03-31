@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
 	"github.com/redis/go-redis/v9"
 )
 

@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/config"
-	"github.com/jasonKoogler/prism/internal/features/gateway/adapters/circuitbreaker"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/gateway/adapters/circuitbreaker"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 	"github.com/stretchr/testify/assert"
 )
 

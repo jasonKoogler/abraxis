@@ -2,11 +2,11 @@ package app
 
 import (
 	"github.com/go-chi/chi/v5"
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/config"
-	"github.com/jasonKoogler/prism/internal/features/apikey"
-	"github.com/jasonKoogler/prism/internal/features/audit"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/apikey"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/audit"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // RegisterAuditRoutes registers the audit routes with the provided router.

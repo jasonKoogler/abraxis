@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jasonKoogler/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
 )
 
 // TenantRepository defines the interface for tenant operations

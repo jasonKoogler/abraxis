@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jasonKoogler/prism/internal/common/validator"
-	"github.com/jasonKoogler/prism/internal/common/validator/is"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/validator"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/validator/is"
 )
 
 // TenantStatus represents the status of a tenant

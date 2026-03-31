@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
 	"github.com/redis/go-redis/v9"
 )
 

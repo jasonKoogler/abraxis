@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
-	"github.com/jasonKoogler/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
 )
 
 func setAuthHeaders(w http.ResponseWriter, tokenPair *domain.TokenPair, sessionID string) {

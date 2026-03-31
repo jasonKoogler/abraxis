@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jasonKoogler/authz/types"
+	"github.com/jasonKoogler/abraxis/authz/types"
 )
 
 // MemoryCache implements the Cache interface with an in-memory LRU cache

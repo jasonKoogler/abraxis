@@ -5,7 +5,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	pb "github.com/jasonKoogler/aegis/api/grpc/aegispb"
+	pb "github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispb"
 )
 
 // AuthEventBus is a channel-based fan-out event bus for auth data events.

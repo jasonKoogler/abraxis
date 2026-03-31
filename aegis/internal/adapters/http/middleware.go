@@ -3,8 +3,8 @@ package http
 import (
 	"net/http"
 
-	"github.com/jasonKoogler/aegis/internal/domain"
-	"github.com/jasonKoogler/aegis/internal/service"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 // AuthMiddleware provides middleware for authenticating HTTP requests.

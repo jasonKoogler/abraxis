@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/render"
-	"github.com/jasonKoogler/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
 )
 
 type ErrorType string

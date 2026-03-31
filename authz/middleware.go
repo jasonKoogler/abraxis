@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/jasonKoogler/authz/types"
+	"github.com/jasonKoogler/abraxis/authz/types"
 )
 
 // MiddlewareOptions contains options for the middleware

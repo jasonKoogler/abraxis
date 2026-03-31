@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth/verifier"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth/verifier"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

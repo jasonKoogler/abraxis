@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 

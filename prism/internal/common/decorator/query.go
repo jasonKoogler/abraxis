@@ -3,7 +3,7 @@ package decorator
 import (
 	"context"
 
-	"github.com/jasonKoogler/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
 )
 
 func ApplyQueryDecorator[H any, R any](handler QueryHandler[H, R], logger *log.Logger, metricsClient MetricsClient) QueryHandler[H, R] {

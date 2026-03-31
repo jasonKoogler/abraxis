@@ -1,11 +1,11 @@
-module github.com/jasonKoogler/aegis
+module github.com/jasonKoogler/abraxis/aegis
 
 go 1.24.0
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
-	github.com/jasonKoogler/authz v0.3.0
+	github.com/jasonKoogler/abraxis/authz v0.3.0
 	github.com/stretchr/testify v1.11.1
 	github.com/swaggo/http-swagger/v2 v2.0.2
 	golang.org/x/crypto v0.46.0

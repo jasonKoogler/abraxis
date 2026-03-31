@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jasonKoogler/authz/types"
+	"github.com/jasonKoogler/abraxis/authz/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -3,8 +3,8 @@ package verifier
 import (
 	"context"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/oauth"
-	"github.com/jasonKoogler/aegis/internal/common/redis"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/oauth"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/redis"
 )
 
 type RedisVerifierStorage struct {

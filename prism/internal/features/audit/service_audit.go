@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/common/api"
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/common/uuid"
-	"github.com/jasonKoogler/prism/internal/domain"
-	"github.com/jasonKoogler/prism/internal/domain/prefixid"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/api"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/uuid"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain/prefixid"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // Common event types for audit logging

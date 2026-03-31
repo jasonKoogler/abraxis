@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jasonKoogler/aegis/internal/common/db"
-	"github.com/jasonKoogler/aegis/internal/domain"
-	"github.com/jasonKoogler/aegis/internal/ports"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/db"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
 )
 
 // AuditLogRepository implements the AuditLogRepository interface

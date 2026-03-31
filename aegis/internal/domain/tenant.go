@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jasonKoogler/aegis/internal/common/validator"
-	"github.com/jasonKoogler/aegis/internal/common/validator/is"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/validator"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/validator/is"
 )
 
 // TenantStatus represents the status of a tenant

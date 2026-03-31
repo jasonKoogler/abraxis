@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/jasonKoogler/prism/internal/domain"
-	"github.com/jasonKoogler/prism/internal/features/auth"
-	"github.com/jasonKoogler/prism/internal/features/auth/adapters/authz"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/auth"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/auth/adapters/authz"
 )
 
 // CombinedMiddleware provides a unified middleware that handles both authentication and authorization.

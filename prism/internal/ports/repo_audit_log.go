@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/common/uuid"
-	"github.com/jasonKoogler/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/uuid"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
 )
 
 // AuditLogRepository defines the interface for audit log operations

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/jasonKoogler/prism/internal/common/uuid"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/uuid"
 	// "github.com/google/uuid"
 )
 

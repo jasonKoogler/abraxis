@@ -7,11 +7,11 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/jasonKoogler/prism/internal/common/log"
-	commonuuid "github.com/jasonKoogler/prism/internal/common/uuid"
-	"github.com/jasonKoogler/prism/internal/domain"
-	"github.com/jasonKoogler/prism/internal/domain/prefixid"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	commonuuid "github.com/jasonKoogler/abraxis/prism/internal/common/uuid"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain/prefixid"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // APIKeyService handles API key management operations

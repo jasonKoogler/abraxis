@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/features/discovery/adapters/provider"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/discovery/adapters/provider"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // ExampleServiceDiscovery demonstrates how to use the service discovery package

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
 )
 
 // func UserFromContext(ctx context.Context) (*authDomain.User, error) {

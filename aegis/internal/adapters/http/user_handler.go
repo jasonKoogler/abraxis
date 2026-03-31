@@ -3,8 +3,8 @@ package http
 import (
 	"net/http"
 
-	"github.com/jasonKoogler/aegis/internal/common/api"
-	"github.com/jasonKoogler/aegis/internal/ports"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/api"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
 )
 
 type userHandler struct {

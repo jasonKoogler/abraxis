@@ -3,17 +3,17 @@ package main
 import (
 	"context"
 
-	_ "github.com/jasonKoogler/prism/docs" // swagger docs
+	_ "github.com/jasonKoogler/abraxis/prism/docs" // swagger docs
 
-	auditpg "github.com/jasonKoogler/prism/internal/features/audit/adapters/postgres"
-	apikeypg "github.com/jasonKoogler/prism/internal/features/apikey/adapters/postgres"
-	tenantpg "github.com/jasonKoogler/prism/internal/features/tenant/adapters"
-	"github.com/jasonKoogler/prism/internal/features/ratelimit"
-	"github.com/jasonKoogler/prism/internal/app"
-	"github.com/jasonKoogler/prism/internal/common/db"
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/common/redis"
-	"github.com/jasonKoogler/prism/internal/config"
+	auditpg "github.com/jasonKoogler/abraxis/prism/internal/features/audit/adapters/postgres"
+	apikeypg "github.com/jasonKoogler/abraxis/prism/internal/features/apikey/adapters/postgres"
+	tenantpg "github.com/jasonKoogler/abraxis/prism/internal/features/tenant/adapters"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/ratelimit"
+	"github.com/jasonKoogler/abraxis/prism/internal/app"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/db"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/redis"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
 )
 
 // @title           Prism API Gateway

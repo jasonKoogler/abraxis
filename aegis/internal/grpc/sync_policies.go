@@ -8,8 +8,8 @@ import (
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 
-	pb "github.com/jasonKoogler/aegis/api/grpc/aegispb"
-	"github.com/jasonKoogler/aegis/internal/common/log"
+	pb "github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispb"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
 )
 
 // SyncPolicies streams the current OPA policy files followed by incremental

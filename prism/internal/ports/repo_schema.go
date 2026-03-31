@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain"
 )
 
 // Repository defines the interface for schema registry data storage

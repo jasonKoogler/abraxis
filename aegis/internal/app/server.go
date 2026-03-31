@@ -14,12 +14,12 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
 
-	adapterHTTP "github.com/jasonKoogler/aegis/internal/adapters/http"
-	"github.com/jasonKoogler/aegis/internal/adapters/ratelimiter"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/config"
-	"github.com/jasonKoogler/aegis/internal/ports"
-	authService "github.com/jasonKoogler/aegis/internal/service"
+	adapterHTTP "github.com/jasonKoogler/abraxis/aegis/internal/adapters/http"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/ratelimiter"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
+	authService "github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 // HTTPServer defines the core server operations

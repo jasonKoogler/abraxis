@@ -11,15 +11,15 @@ import (
 	"github.com/go-chi/cors"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 
-	"github.com/jasonKoogler/aegis/internal/adapters/authz"
-	adaptersHTTP "github.com/jasonKoogler/aegis/internal/adapters/http"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/common/redis"
-	"github.com/jasonKoogler/aegis/internal/config"
-	"github.com/jasonKoogler/aegis/internal/domain"
-	aegisgrpc "github.com/jasonKoogler/aegis/internal/grpc"
-	"github.com/jasonKoogler/aegis/internal/ports"
-	"github.com/jasonKoogler/aegis/internal/service"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/authz"
+	adaptersHTTP "github.com/jasonKoogler/abraxis/aegis/internal/adapters/http"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/redis"
+	"github.com/jasonKoogler/abraxis/aegis/internal/config"
+	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
+	aegisgrpc "github.com/jasonKoogler/abraxis/aegis/internal/grpc"
+	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
+	"github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 // App encapsulates the application and its dependencies

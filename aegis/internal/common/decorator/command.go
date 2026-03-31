@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jasonKoogler/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
 )
 
 func ApplyCommandDecorators[H any](handler CommandHandler[H], logger *log.Logger, metricsClient MetricsClient) CommandHandler[H] {

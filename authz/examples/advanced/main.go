@@ -9,9 +9,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/jasonKoogler/authz"
-	"github.com/jasonKoogler/authz/cache"
-	"github.com/jasonKoogler/authz/roles"
+	"github.com/jasonKoogler/abraxis/authz"
+	"github.com/jasonKoogler/abraxis/authz/cache"
+	"github.com/jasonKoogler/abraxis/authz/roles"
 	"github.com/redis/go-redis/v9"
 )
 

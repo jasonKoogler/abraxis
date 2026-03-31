@@ -6,8 +6,8 @@ import (
 	"io"
 	"time"
 
-	pb "github.com/jasonKoogler/aegis/api/grpc/aegispb"
-	"github.com/jasonKoogler/prism/internal/common/log"
+	pb "github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispb"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
 )
 
 // syncPoliciesLoop reconnects to the SyncPolicies stream with

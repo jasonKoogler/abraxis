@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/config"
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/config"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // ServiceRegistry provides a thread-safe registry for managing services dynamically

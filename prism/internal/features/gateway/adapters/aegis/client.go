@@ -5,10 +5,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	pb "github.com/jasonKoogler/aegis/api/grpc/aegispb"
-	"github.com/jasonKoogler/prism/internal/common/log"
-	"github.com/jasonKoogler/prism/internal/common/redis"
-	"github.com/jasonKoogler/prism/internal/features/auth/adapters/authz"
+	pb "github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispb"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/log"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/redis"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/auth/adapters/authz"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

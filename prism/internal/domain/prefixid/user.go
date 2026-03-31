@@ -1,8 +1,8 @@
 package prefixid
 
 import (
-	commonID "github.com/jasonKoogler/prism/internal/common/id"
-	"github.com/jasonKoogler/prism/internal/common/uuid"
+	commonID "github.com/jasonKoogler/abraxis/prism/internal/common/id"
+	"github.com/jasonKoogler/abraxis/prism/internal/common/uuid"
 )
 
 type UserID struct{ commonID.PrefixedID }

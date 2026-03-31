@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jasonKoogler/prism/internal/ports"
+	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
 // NewServiceDiscovery creates a new service discovery based on configuration

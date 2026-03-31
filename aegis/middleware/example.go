@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/jasonKoogler/aegis/internal/adapters/authz"
-	"github.com/jasonKoogler/aegis/internal/common/log"
-	"github.com/jasonKoogler/aegis/internal/service"
+	"github.com/jasonKoogler/abraxis/aegis/internal/adapters/authz"
+	"github.com/jasonKoogler/abraxis/aegis/internal/common/log"
+	"github.com/jasonKoogler/abraxis/aegis/internal/service"
 )
 
 // ExampleUsage demonstrates how to use the combined middleware

@@ -14,8 +14,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jasonKoogler/authz/cache"
-	"github.com/jasonKoogler/authz/types"
+	"github.com/jasonKoogler/abraxis/authz/cache"
+	"github.com/jasonKoogler/abraxis/authz/types"
 	"github.com/open-policy-agent/opa/v1/rego"
 )
 
