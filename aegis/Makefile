@@ -94,7 +94,7 @@ install-proto-tools: ## Install protobuf code generation tools
 # ------------------------------------------------------------
 .PHONY: swagger
 swagger: ## Generate swagger docs via swag init
-	GOWORK=off swag init -g cmd/main.go --parseDependency --parseInternal --useStructName
+	swag init -g cmd/main.go --parseDependency --parseInternal --useStructName
 
 # ------------------------------------------------------------
 # Clean

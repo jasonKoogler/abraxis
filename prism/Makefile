@@ -15,7 +15,7 @@ GOGET := $(GOCMD) get
 # Application parameters
 APP_NAME := myapp
 BUILD_DIR := build
-MAIN_PATH := ./cmd/$(APP_NAME)
+MAIN_PATH := ./cmd
 
 # Define project root directory and shell
 ROOT_DIR := $(shell pwd)
@@ -60,7 +60,7 @@ test-with-race: ## Run tests with race detection
 # ------------------------------------------------------------
 .PHONY: swagger
 swagger: ## Generate swagger docs from swaggo annotations
-	GOWORK=off swag init -g cmd/main.go --parseDependency --parseInternal --useStructName
+	swag init -g cmd/main.go --parseDependency --parseInternal --useStructName
 
 .PHONY: sdk
 sdk: swagger ## Generate swagger docs and TypeScript SDK
