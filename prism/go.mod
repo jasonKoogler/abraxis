@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/hashicorp/consul/api v1.31.2
-	github.com/jasonKoogler/abraxis/authz v0.3.0
+	github.com/jasonKoogler/abraxis/authz v0.0.0
 	github.com/ory/dockertest/v3 v3.11.0
 	github.com/segmentio/ksuid v1.0.4
 	github.com/stretchr/testify v1.10.0

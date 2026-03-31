@@ -670,7 +670,7 @@ const file_aegis_proto_rawDesc = "" +
 	"\fSyncAuthData\x12\x14.aegispb.SyncRequest\x1a\x16.aegispb.AuthDataEvent0\x01\x12<\n" +
 	"\fSyncPolicies\x12\x14.aegispb.SyncRequest\x1a\x14.aegispb.PolicyEvent0\x01\x12T\n" +
 	"\x0fCheckPermission\x12\x1f.aegispb.CheckPermissionRequest\x1a .aegispb.CheckPermissionResponse\x12Q\n" +
-	"\x0eValidateAPIKey\x12\x1e.aegispb.ValidateAPIKeyRequest\x1a\x1f.aegispb.ValidateAPIKeyResponseB0Z.github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispbb\x06proto3"
+	"\x0eValidateAPIKey\x12\x1e.aegispb.ValidateAPIKeyRequest\x1a\x1f.aegispb.ValidateAPIKeyResponseB8Z6github.com/jasonKoogler/abraxis/aegis/api/grpc/aegispbb\x06proto3"
 
 var (
 	file_aegis_proto_rawDescOnce sync.Once

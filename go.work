@@ -5,3 +5,5 @@ use (
 	./prism
 	./authz
 )
+
+replace github.com/jasonKoogler/abraxis/authz v0.0.0 => ./authz
