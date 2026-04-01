@@ -68,6 +68,7 @@ func NewUser(params *UserCreateParams) (*User, error) {
 	}
 
 	return &User{
+		ID:              uuid.New(),
 		Email:           params.Email,
 		FirstName:       params.FirstName,
 		LastName:        params.LastName,
