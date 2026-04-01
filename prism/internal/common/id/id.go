@@ -76,12 +76,13 @@ func ParsePrefixedID(value string, expectedPrefix string) (ID, error) {
 	}
 
 	idPart := strings.TrimPrefix(value, expectedPrefix)
-	_, err := uuid.Parse(idPart)
+	raw, err := uuid.Parse(idPart)
 	if err != nil {
 		return nil, ErrInvalidUUID
 	}
 
 	return &PrefixedID{
+		raw:    raw,
 		value:  value,
 		prefix: strings.TrimSuffix(expectedPrefix, "_"),
 	}, nil

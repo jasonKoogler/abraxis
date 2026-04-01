@@ -69,30 +69,24 @@ func (ar *APIKeyRepository) Create(ctx context.Context, apiKey *domain.APIKey) (
 	apiKey.CreatedAt = now
 	apiKey.UpdatedAt = now
 
-	// Convert IP address to string for storage
-	var createdIPStr *string
-	if apiKey.CreatedIPAddress != nil {
-		ipStr := apiKey.CreatedIPAddress.String()
-		createdIPStr = &ipStr
-	}
-
 	// Clear RawAPIKey for security before storage
 	// This ensures the raw key is never stored in the database
 	apiKey.RawAPIKey = ""
 
 	// Execute query and scan result
 	var result domain.APIKey
-	var createdIPStrResult, lastUsedIPStr *string
 	var scopes []string
+	var expiresAt, lastUsedAt *time.Time
+	var createdIP, lastUsedIP net.IP
 
 	err := ar.db.QueryRow(ctx, query,
 		apiKey.ID, apiKey.Name, apiKey.KeyPrefix, apiKey.KeyHash,
 		apiKey.TenantID, apiKey.UserID, apiKey.Scopes, apiKey.ExpiresAt,
-		createdIPStr, apiKey.IsActive, apiKey.CreatedAt, apiKey.UpdatedAt,
+		apiKey.CreatedIPAddress, apiKey.IsActive, apiKey.CreatedAt, apiKey.UpdatedAt,
 	).Scan(
 		&result.ID, &result.Name, &result.KeyPrefix, &result.KeyHash,
-		&result.TenantID, &result.UserID, &scopes, &result.ExpiresAt,
-		&result.LastUsedAt, &createdIPStrResult, &lastUsedIPStr,
+		&result.TenantID, &result.UserID, &scopes, &expiresAt,
+		&lastUsedAt, &createdIP, &lastUsedIP,
 		&result.IsActive, &result.CreatedAt, &result.UpdatedAt,
 	)
 
@@ -100,16 +94,16 @@ func (ar *APIKeyRepository) Create(ctx context.Context, apiKey *domain.APIKey) (
 		return nil, fmt.Errorf("failed to create API key: %w", err)
 	}
 
-	// Process the scopes and IP addresses
+	// Process nullable fields
 	result.Scopes = scopes
-
-	if createdIPStrResult != nil {
-		result.CreatedIPAddress = net.ParseIP(*createdIPStrResult)
+	if expiresAt != nil {
+		result.ExpiresAt = *expiresAt
 	}
-
-	if lastUsedIPStr != nil {
-		result.LastUsedIPAddress = net.ParseIP(*lastUsedIPStr)
+	if lastUsedAt != nil {
+		result.LastUsedAt = *lastUsedAt
 	}
+	result.CreatedIPAddress = createdIP
+	result.LastUsedIPAddress = lastUsedIP
 
 	return &result, nil
 }
@@ -277,7 +271,7 @@ func (ar *APIKeyRepository) UpdateLastUsed(ctx context.Context, id uuid.UUID, ip
 
 	now := time.Now().UTC()
 
-	result, err := ar.db.Exec(ctx, query, id, now, ipAddress, now)
+	result, err := ar.db.Exec(ctx, query, id, now, net.ParseIP(ipAddress), now)
 	if err != nil {
 		return fmt.Errorf("failed to update last used for API key %s: %w", id, err)
 	}
@@ -292,13 +286,14 @@ func (ar *APIKeyRepository) UpdateLastUsed(ctx context.Context, id uuid.UUID, ip
 // scanSingleAPIKey is a helper method to scan a single API key from a query result
 func (ar *APIKeyRepository) scanSingleAPIKey(ctx context.Context, query string, args ...interface{}) (*domain.APIKey, error) {
 	var apiKey domain.APIKey
-	var createdIPStr, lastUsedIPStr *string
 	var scopes []string
+	var expiresAt, lastUsedAt *time.Time
+	var createdIP, lastUsedIP net.IP
 
 	err := ar.db.QueryRow(ctx, query, args...).Scan(
 		&apiKey.ID, &apiKey.Name, &apiKey.KeyPrefix, &apiKey.KeyHash,
-		&apiKey.TenantID, &apiKey.UserID, &scopes, &apiKey.ExpiresAt,
-		&apiKey.LastUsedAt, &createdIPStr, &lastUsedIPStr,
+		&apiKey.TenantID, &apiKey.UserID, &scopes, &expiresAt,
+		&lastUsedAt, &createdIP, &lastUsedIP,
 		&apiKey.IsActive, &apiKey.CreatedAt, &apiKey.UpdatedAt,
 	)
 	if err != nil {
@@ -306,14 +301,14 @@ func (ar *APIKeyRepository) scanSingleAPIKey(ctx context.Context, query string, 
 	}
 
 	apiKey.Scopes = scopes
-
-	if createdIPStr != nil {
-		apiKey.CreatedIPAddress = net.ParseIP(*createdIPStr)
+	if expiresAt != nil {
+		apiKey.ExpiresAt = *expiresAt
 	}
-
-	if lastUsedIPStr != nil {
-		apiKey.LastUsedIPAddress = net.ParseIP(*lastUsedIPStr)
+	if lastUsedAt != nil {
+		apiKey.LastUsedAt = *lastUsedAt
 	}
+	apiKey.CreatedIPAddress = createdIP
+	apiKey.LastUsedIPAddress = lastUsedIP
 
 	return &apiKey, nil
 }
@@ -329,27 +324,28 @@ func (ar *APIKeyRepository) scanMultipleAPIKeys(ctx context.Context, query strin
 	apiKeys := []*domain.APIKey{}
 	for rows.Next() {
 		var apiKey domain.APIKey
-		var createdIPStr, lastUsedIPStr *string
 		var scopes []string
+		var expiresAt, lastUsedAt *time.Time
+		var createdIP, lastUsedIP net.IP
 
 		if err := rows.Scan(
 			&apiKey.ID, &apiKey.Name, &apiKey.KeyPrefix, &apiKey.KeyHash,
-			&apiKey.TenantID, &apiKey.UserID, &scopes, &apiKey.ExpiresAt,
-			&apiKey.LastUsedAt, &createdIPStr, &lastUsedIPStr,
+			&apiKey.TenantID, &apiKey.UserID, &scopes, &expiresAt,
+			&lastUsedAt, &createdIP, &lastUsedIP,
 			&apiKey.IsActive, &apiKey.CreatedAt, &apiKey.UpdatedAt,
 		); err != nil {
 			return nil, fmt.Errorf("failed to scan API key data: %w", err)
 		}
 
 		apiKey.Scopes = scopes
-
-		if createdIPStr != nil {
-			apiKey.CreatedIPAddress = net.ParseIP(*createdIPStr)
+		if expiresAt != nil {
+			apiKey.ExpiresAt = *expiresAt
 		}
-
-		if lastUsedIPStr != nil {
-			apiKey.LastUsedIPAddress = net.ParseIP(*lastUsedIPStr)
+		if lastUsedAt != nil {
+			apiKey.LastUsedAt = *lastUsedAt
 		}
+		apiKey.CreatedIPAddress = createdIP
+		apiKey.LastUsedIPAddress = lastUsedIP
 
 		apiKeys = append(apiKeys, &apiKey)
 	}

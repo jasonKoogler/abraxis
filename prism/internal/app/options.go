@@ -10,6 +10,8 @@ import (
 	"github.com/jasonKoogler/abraxis/prism/internal/common/redis"
 	"github.com/jasonKoogler/abraxis/prism/internal/config"
 	"github.com/jasonKoogler/abraxis/prism/internal/domain"
+	apikeyfeature "github.com/jasonKoogler/abraxis/prism/internal/features/apikey"
+	"github.com/jasonKoogler/abraxis/prism/internal/features/audit"
 	"github.com/jasonKoogler/abraxis/prism/internal/features/auth/adapters/authz"
 	"github.com/jasonKoogler/abraxis/prism/internal/features/discovery/adapters/provider"
 	"github.com/jasonKoogler/abraxis/prism/internal/features/gateway"
@@ -425,11 +427,41 @@ func WithDefaultAegisClient() AppOption {
 	}
 }
 
+// WithDefaultAuditService creates the audit service from the audit repository.
+func WithDefaultAuditService() AppOption {
+	return func(a *App) error {
+		if a.auditRepo == nil {
+			return ErrNilAuditRepository
+		}
+		if a.logger == nil {
+			return ErrLoggerRequired
+		}
+		a.auditService = audit.NewAuditService(a.auditRepo, a.logger)
+		return nil
+	}
+}
+
+// WithDefaultAPIKeyService creates the API key service from the API key repository.
+func WithDefaultAPIKeyService() AppOption {
+	return func(a *App) error {
+		if a.apiKeyRepo == nil {
+			return ErrNilAPIKeyRepository
+		}
+		if a.logger == nil {
+			return ErrLoggerRequired
+		}
+		a.apiKeyService = apikeyfeature.NewAPIKeyService(a.apiKeyRepo, a.logger)
+		return nil
+	}
+}
+
 // WithAllDefaultServices creates all default services based on available repositories
 func WithAllDefaultServices(ctx context.Context) AppOption {
 	return func(a *App) error {
 		// Apply individual service options in order
 		options := []AppOption{
+			WithDefaultAuditService(),
+			WithDefaultAPIKeyService(),
 			WithDefaultAuthZService(),
 			WithDefaultServiceDiscovery(ctx),
 			WithDefaultServer(),

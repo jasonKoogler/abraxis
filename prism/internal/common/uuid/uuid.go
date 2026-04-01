@@ -1,29 +1,30 @@
 package uuid
 
 import (
-	"github.com/segmentio/ksuid"
+	googleuuid "github.com/google/uuid"
 )
 
+// UUID wraps google/uuid.UUID for use in the prefixed ID system.
 type UUID struct {
-	ksuid.KSUID
+	googleuuid.UUID
 }
 
+// New creates a new random UUID.
 func New() (UUID, error) {
-	ksuid, err := ksuid.NewRandom()
-	if err != nil {
-		return UUID{}, err
-	}
-	return UUID{ksuid}, nil
+	id := googleuuid.New()
+	return UUID{id}, nil
 }
 
+// Parse parses a standard UUID string.
 func Parse(value string) (UUID, error) {
-	ksuid, err := ksuid.Parse(value)
+	id, err := googleuuid.Parse(value)
 	if err != nil {
 		return UUID{}, err
 	}
-	return UUID{ksuid}, nil
+	return UUID{id}, nil
 }
 
+// Nil returns the nil UUID.
 func Nil() UUID {
-	return UUID{ksuid.Nil}
+	return UUID{googleuuid.Nil}
 }

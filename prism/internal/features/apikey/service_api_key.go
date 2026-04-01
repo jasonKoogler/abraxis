@@ -37,6 +37,9 @@ func (s *APIKeyService) Create(ctx context.Context, params *domain.APIKey_Create
 		return nil, err
 	}
 
+	// Preserve the raw key before the repository clears it for security.
+	rawKey := apiKey.RawAPIKey
+
 	// Save to repository
 	createdKey, err := s.apiKeyRepo.Create(ctx, apiKey)
 	if err != nil {
@@ -63,7 +66,7 @@ func (s *APIKeyService) Create(ctx context.Context, params *domain.APIKey_Create
 		ID:        apiKeyID.String(),
 		Name:      apiKey.Name,
 		KeyPrefix: apiKey.KeyPrefix,
-		RawAPIKey: apiKey.RawAPIKey,
+		RawAPIKey: rawKey,
 		Scopes:    apiKey.Scopes,
 		ExpiresAt: apiKey.ExpiresAt,
 		CreatedAt: apiKey.CreatedAt,

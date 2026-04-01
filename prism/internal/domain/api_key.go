@@ -191,6 +191,13 @@ func (p *APIKey_CreateParams) Validate() error {
 	v.CheckString("name", p.Name, is.String)
 	v.CheckString("ip_address", p.IPAddress, is.String)
 
+	// Normalize ip:port to just IP (r.RemoteAddr includes port).
+	if p.IPAddress != "" {
+		if h, _, err := net.SplitHostPort(p.IPAddress); err == nil {
+			p.IPAddress = h
+		}
+	}
+
 	return v.Errors()
 }
 
@@ -313,11 +320,16 @@ func (p *APIKey_ValidateParams) Validate() error {
 	}
 
 	if p.IPAddress != "" {
-		v.CheckString("ip_address", p.IPAddress, is.String)
-	}
-
-	if net.ParseIP(p.IPAddress) == nil {
-		v.AddError("ip_address", "must be a valid IP address")
+		// Strip port from ip:port format (e.g., r.RemoteAddr).
+		host := p.IPAddress
+		if h, _, err := net.SplitHostPort(p.IPAddress); err == nil {
+			host = h
+		}
+		if net.ParseIP(host) == nil {
+			v.AddError("ip_address", "must be a valid IP address")
+		}
+		// Normalize to just the IP for downstream use.
+		p.IPAddress = host
 	}
 
 	return v.Errors()
@@ -352,8 +364,8 @@ func ExtractKeyPrefixForLookup(rawKey string) (string, error) {
 		return "", errors.New("invalid API key format: missing prefix")
 	}
 
-	// Split to get the parts
-	keyParts := strings.Split(rawKey, "_")
+	// Split on first underscore only — base64url can contain underscores.
+	keyParts := strings.SplitN(rawKey, "_", 2)
 	if len(keyParts) != 2 {
 		return "", errors.New("invalid API key format: incorrect format")
 	}

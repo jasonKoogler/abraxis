@@ -133,11 +133,13 @@ func (a *App) Start() error {
 	a.srv.SetReadinessCheckers(a.readinessCheckers)
 
 	// Register global middlewares.
-	a.srv.GetRouter().Use(createCorsMiddleware(a.cfg))
+	if corsMiddleware := createCorsMiddleware(a.cfg); corsMiddleware != nil {
+		a.srv.GetRouter().Use(corsMiddleware)
+	}
 	a.srv.GetRouter().Use(chimiddleware.RequestID)
 	a.srv.GetRouter().Use(chimiddleware.RealIP)
 	a.srv.GetRouter().Use(chimiddleware.Recoverer)
-	a.srv.GetRouter().Use(chimiddleware.Logger)
+	a.srv.GetRouter().Use(log.NewHTTPLogger(a.logger))
 
 	// Start Aegis gRPC sync if enabled
 	if a.cfg.Aegis.SyncEnabled && a.aegisClient != nil {

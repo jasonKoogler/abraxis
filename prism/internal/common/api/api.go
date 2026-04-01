@@ -19,9 +19,12 @@ import (
 // }
 
 func Respond(w http.ResponseWriter, code int, v interface{}) error {
+	if code == http.StatusNoContent || v == nil {
+		w.WriteHeader(code)
+		return nil
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-
 	return json.NewEncoder(w).Encode(v)
 }
 
