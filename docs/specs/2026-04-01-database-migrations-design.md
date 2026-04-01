@@ -32,7 +32,7 @@ Prism owns gateway routing, its own audit logs, and API key validation. Gets a c
 | Migration | Tables | Source |
 |-----------|--------|--------|
 | `00001_create_trigger_function` | trigger function | Copied from shared 00000 |
-| `00002_create_tenants_table` | tenants only (no user_tenant_memberships) | Trimmed from shared 00011 |
+| `00002_create_tenants_table` | tenants only (no user_tenant_memberships, no FK to users — `owner_id` becomes plain UUID) | Trimmed from shared 00011 |
 | `00003_create_gateway_tables` | api_keys, audit_logs, api_routes | From Prism's enhanced 00012 |
 
 **Prism does NOT get:** users, user_tenant_memberships, roles, permissions, role_permissions, user_roles, or any ABAC tables. These live in Aegis. Prism accesses auth/role data via gRPC, not database.
