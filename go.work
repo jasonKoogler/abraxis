@@ -4,6 +4,7 @@ use (
 	./aegis
 	./prism
 	./authz
+	./tests
 )
 
 replace github.com/jasonKoogler/abraxis/authz v0.0.0 => ./authz
