@@ -368,6 +368,12 @@ func LoadConfig() (*Config, error) {
 			Timezone: os.Getenv("POSTGRES_TIMEZONE"),
 			Timeout:  os.Getenv("POSTGRES_TIMEOUT"),
 		},
+		Redis: RedisConfig{
+			Host:     os.Getenv("REDIS_HOST"),
+			Port:     os.Getenv("REDIS_PORT"),
+			Password: os.Getenv("REDIS_PASSWORD"),
+			Username: os.Getenv("REDIS_USERNAME"),
+		},
 		// Redpanda: RedpandaConfig{
 		// 	Brokers: strings.Split(os.Getenv("REDPANDA_BROKERS"), ","),
 		// 	Group:   os.Getenv("REDPANDA_GROUP"),

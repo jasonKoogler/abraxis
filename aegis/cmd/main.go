@@ -55,15 +55,8 @@ func main() {
 		logger.Fatal("Failed to create Redis client", log.Error(err))
 	}
 
-	// Initialize rate limiter
-	rateLimiterParams := ratelimiter.RateLimiterConfigToParams(&cfg.RateLimit)
-	rateLimiter, err := ratelimiter.NewRedisRateLimiter(rateLimiterParams)
-	if err != nil {
-		logger.Fatal("Failed to create redis rate limiter", log.Error(err))
-	}
-
 	// Create application with functional options
-	application, err := app.NewApp(
+	opts := []app.AppOption{
 		app.WithConfig(cfg),
 		app.WithLogger(logger),
 		// Repositories
@@ -74,11 +67,23 @@ func main() {
 		app.WithPermissionRepository(permissionRepo),
 		app.WithRolePermissionRepository(rolePermissionRepo),
 		// Infrastructure
-		app.WithRateLimiter(rateLimiter),
 		app.WithRedisClient(redisClient),
 		// Initialize all supported services
 		app.WithAllDefaultServices(ctx),
-	)
+	}
+
+	// Conditionally add Redis rate limiter
+	if cfg.UseRedisRateLimiter {
+		rateLimiterParams := ratelimiter.RateLimiterConfigToParams(&cfg.RateLimit)
+		rateLimiterParams.RedisClient = redisClient.Client
+		rl, err := ratelimiter.NewRedisRateLimiter(rateLimiterParams)
+		if err != nil {
+			logger.Fatal("Failed to create redis rate limiter", log.Error(err))
+		}
+		opts = append(opts, app.WithRateLimiter(rl))
+	}
+
+	application, err := app.NewApp(opts...)
 	if err != nil {
 		logger.Fatal("Failed to create application", log.Error(err))
 	}
