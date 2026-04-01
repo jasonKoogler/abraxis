@@ -26,6 +26,8 @@ type UserContextData struct {
 	Roles        RoleMap
 	AuthProvider string
 	SessionID    string
+	JTI          string // JWT ID — used for token revocation
+	ExpiresAt    int64  // Unix timestamp of token expiry — used for revocation TTL
 }
 
 func RolesFromContext(ctx context.Context) RoleMap {

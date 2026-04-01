@@ -137,9 +137,21 @@ func TestCrossService(t *testing.T) {
 		resp, err := http.DefaultClient.Do(req)
 		require.NoError(t, err)
 		defer resp.Body.Close()
-		require.Equal(t, http.StatusOK, resp.StatusCode, "token should work before logout")
+		require.Equal(t, http.StatusOK, resp.StatusCode, "token should work on Aegis before logout")
 
-		// 3. Logout in Aegis (revokes session).
+		// 3. Verify the token works on Prism's auth-protected /apikey endpoint.
+		// A dummy tenant_id is required by the handler; we only care that auth passes.
+		prismReqBefore, err := http.NewRequest(http.MethodGet, stack.PrismURL+"/apikey?tenant_id=tnt_00000000-0000-0000-0000-000000000001", nil)
+		require.NoError(t, err)
+		prismReqBefore.Header.Set("Authorization", "Bearer "+accessToken)
+
+		prismRespBefore, err := http.DefaultClient.Do(prismReqBefore)
+		require.NoError(t, err)
+		defer prismRespBefore.Body.Close()
+		require.Equal(t, http.StatusOK, prismRespBefore.StatusCode,
+			"token should work on Prism before logout")
+
+		// 4. Logout in Aegis (revokes session + publishes TokenRevoked to gRPC).
 		logoutReq, err := http.NewRequest(http.MethodPost, stack.AegisURL+"/auth/logout", nil)
 		require.NoError(t, err)
 		logoutReq.Header.Set("Authorization", "Bearer "+accessToken)
@@ -154,7 +166,7 @@ func TestCrossService(t *testing.T) {
 		defer logoutResp.Body.Close()
 		require.Equal(t, http.StatusFound, logoutResp.StatusCode, "logout should return 302")
 
-		// 4. Verify the token is rejected by Aegis (session invalidated).
+		// 5. Verify the token is rejected by Aegis (session invalidated).
 		reqAfterLogout, err := http.NewRequest(http.MethodGet, stack.AegisURL+"/users", nil)
 		require.NoError(t, err)
 		reqAfterLogout.Header.Set("Authorization", "Bearer "+accessToken)
@@ -165,20 +177,20 @@ func TestCrossService(t *testing.T) {
 		require.Equal(t, http.StatusUnauthorized, respAfterLogout.StatusCode,
 			"Aegis should reject token after logout (session invalidated)")
 
-		// 5. Cross-service revocation: check if Prism also rejects the token.
-		// NOTE: This requires the Aegis logout flow to publish a TokenRevoked
-		// event to the gRPC stream, which Prism then caches in Redis. As of
-		// this writing, the PublishTokenRevoked call is NOT wired into the
-		// Aegis logout handler, so Prism will NOT reject the token via gRPC.
-		// Additionally, Prism's /apikey endpoint is not auth-protected in
-		// the current architecture (auth is only on the service proxy path).
-		//
-		// We test this as best-effort and log the result without failing.
-		time.Sleep(2 * time.Second) // Allow gRPC propagation time.
+		// 6. Cross-service revocation: verify Prism also rejects the token.
+		// Aegis publishes a TokenRevoked event to the gRPC stream on logout.
+		// Prism caches the revoked JTI in Redis and checks it on every
+		// authenticated request. Allow a short propagation window.
+		time.Sleep(2 * time.Second)
 
-		t.Log("CONCERN: Cross-service token revocation via gRPC is not yet wired. " +
-			"Aegis's Logout does not call PublishTokenRevoked on the gRPC event bus. " +
-			"Prism would need the service proxy configured for auth-protected endpoints. " +
-			"This will be addressed when the gRPC revocation pipeline is completed.")
+		prismReqAfter, err := http.NewRequest(http.MethodGet, stack.PrismURL+"/apikey?tenant_id=tnt_00000000-0000-0000-0000-000000000001", nil)
+		require.NoError(t, err)
+		prismReqAfter.Header.Set("Authorization", "Bearer "+accessToken)
+
+		prismRespAfter, err := http.DefaultClient.Do(prismReqAfter)
+		require.NoError(t, err)
+		defer prismRespAfter.Body.Close()
+		require.Equal(t, http.StatusUnauthorized, prismRespAfter.StatusCode,
+			"Prism should reject token after Aegis logout (cross-service revocation via gRPC)")
 	})
 }

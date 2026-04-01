@@ -28,6 +28,7 @@ type AuthManager struct {
 	authConfig     *config.AuthConfig
 	userService    *UserService
 	oauthManager   *oauth.OAuthManager
+	tokenRevoker   ports.TokenRevoker // publishes revocation events to downstream consumers (e.g. gRPC event bus)
 
 	// rwmu sync.RWMutex
 
@@ -154,6 +155,13 @@ func (am *AuthManager) Close() error {
 		return err
 	}
 	return nil
+}
+
+// SetTokenRevoker attaches a TokenRevoker to the AuthManager. This is called
+// after construction to break the circular dependency between the AuthManager
+// and the gRPC server (which implements TokenRevoker).
+func (am *AuthManager) SetTokenRevoker(revoker ports.TokenRevoker) {
+	am.tokenRevoker = revoker
 }
 
 // GetUserByID retrieves a user by their ID.

@@ -14,8 +14,10 @@ import (
 	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
 )
 
-// Logout logs the user out by invalidating the session and performing
-// any necessary provider-specific cleanup.
+// Logout logs the user out by invalidating the session, performing
+// any necessary provider-specific cleanup, and publishing a token
+// revocation event so downstream consumers (e.g. Prism) can reject
+// the token immediately.
 func (am *AuthManager) Logout(ctx context.Context, userID, sessionID string) error {
 	// Validate input parameters
 	if !util.HasUserPrefix(userID) {
@@ -34,6 +36,19 @@ func (am *AuthManager) Logout(ctx context.Context, userID, sessionID string) err
 	// Invalidate the user session (revoke all associated tokens)
 	if err := am.sessionManager.InvalidateUserSession(ctx, userID, sessionID); err != nil {
 		return am.wrapError(err, "failed to revoke tokens for session")
+	}
+
+	// Publish token revocation to the gRPC event bus so that downstream
+	// services (Prism) can reject the token before it naturally expires.
+	// The JTI and ExpiresAt come from the UserContextData that the auth
+	// middleware placed on the context during request validation.
+	if am.tokenRevoker != nil {
+		if usrCtx, ok := domain.UserContextDataFromContext(ctx); ok && usrCtx.JTI != "" {
+			am.tokenRevoker.PublishTokenRevoked(usrCtx.JTI, usrCtx.ExpiresAt)
+			am.logger.Info("Published token revocation event",
+				log.String("jti", usrCtx.JTI),
+				log.String("userID", userID))
+		}
 	}
 
 	// Perform provider-specific logout if required based on the session's provider and OAuth token (if available)

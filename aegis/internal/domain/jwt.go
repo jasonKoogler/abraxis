@@ -50,11 +50,17 @@ func (c CustomClaims) GetAudience() (jwt.ClaimStrings, error) {
 }
 
 func (c CustomClaims) GetUserContextData() *UserContextData {
+	var expiresAt int64
+	if c.ExpiresAt != nil {
+		expiresAt = c.ExpiresAt.Unix()
+	}
 	return &UserContextData{
 		UserID:       c.Subject,
 		Roles:        c.Roles,
 		AuthProvider: c.AuthProvider,
 		SessionID:    c.SessionID,
+		JTI:          c.ID,
+		ExpiresAt:    expiresAt,
 	}
 }
 

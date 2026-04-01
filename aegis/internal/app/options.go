@@ -486,16 +486,22 @@ func WithDefaultAuthZService() AppOption {
 	}
 }
 
-// WithGRPCServer sets the gRPC server
+// WithGRPCServer sets the gRPC server. When an AuthManager is already
+// configured, the server is automatically registered as its TokenRevoker.
 func WithGRPCServer(server *aegisgrpc.AegisAuthServer) AppOption {
 	return func(a *App) error {
 		a.grpcServer = server
+		if a.authService != nil && server != nil {
+			a.authService.SetTokenRevoker(server)
+		}
 		return nil
 	}
 }
 
 // WithDefaultGRPCServer creates a default gRPC server using the app's configured dependencies.
-// It is a no-op when GRPC is not enabled in config.
+// It is a no-op when GRPC is not enabled in config. When an AuthManager is available, the
+// gRPC server is automatically registered as its TokenRevoker so that logout events are
+// broadcast to downstream consumers.
 func WithDefaultGRPCServer() AppOption {
 	return func(a *App) error {
 		if !a.cfg.GRPC.Enabled {
@@ -508,6 +514,13 @@ func WithDefaultGRPCServer() AppOption {
 			AuthzAdapter:   a.authzService,
 			PolicyFilePath: a.cfg.Auth.AuthZ.PolicyFilePath,
 		})
+
+		// Wire the gRPC server as the token revoker for the AuthManager so
+		// that Logout publishes revocation events to the gRPC event bus.
+		if a.authService != nil {
+			a.authService.SetTokenRevoker(a.grpcServer)
+		}
+
 		return nil
 	}
 }
