@@ -57,7 +57,7 @@ Authz is a powerful, flexible authorization framework for Go applications that i
 ## Installation
 
 ```bash
-go get github.com/jasonKoogler/authz
+go get github.com/jasonKoogler/abraxis/authz
 ```
 
 ## Quick Start
@@ -74,7 +74,7 @@ import (
     "os"
     "time"
 
-    "github.com/jasonKoogler/authz"
+    "github.com/jasonKoogler/abraxis/authz"
 )
 
 func main() {
@@ -622,7 +622,7 @@ import (
     "os"
     "time"
 
-    "github.com/jasonKoogler/authz"
+    "github.com/jasonKoogler/abraxis/authz"
 )
 
 func main() {
@@ -738,9 +738,9 @@ import (
     "os"
     "time"
 
-    "github.com/jasonKoogler/authz"
-    "github.com/jasonKoogler/authz/cache"
-    "github.com/jasonKoogler/authz/roles"
+    "github.com/jasonKoogler/abraxis/authz"
+    "github.com/jasonKoogler/abraxis/authz/cache"
+    "github.com/jasonKoogler/abraxis/authz/roles"
     "github.com/redis/go-redis/v9"
 )
 
