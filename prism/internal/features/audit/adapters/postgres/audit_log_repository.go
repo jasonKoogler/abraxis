@@ -3,15 +3,21 @@ package postgres
 import (
 	"bytes"
 	"context"
+	"database/sql"
 	"encoding/csv"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"net"
 	"strings"
 	"time"
+
+	googleuuid "github.com/google/uuid"
 
 	"github.com/jasonKoogler/abraxis/prism/internal/common/db"
 	"github.com/jasonKoogler/abraxis/prism/internal/common/uuid"
 	"github.com/jasonKoogler/abraxis/prism/internal/domain"
+	"github.com/jasonKoogler/abraxis/prism/internal/domain/prefixid"
 	"github.com/jasonKoogler/abraxis/prism/internal/ports"
 )
 
@@ -59,23 +65,61 @@ func (a *AuditLogRepository) Create(ctx context.Context, log *domain.AuditLog) (
 // GetByID retrieves an audit log entry by ID
 func (a *AuditLogRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.AuditLog, error) {
 	query := `
-		SELECT 
-			id, event_type, actor_type, actor_id, tenant_id, resource_type, 
+		SELECT
+			id, event_type, actor_type, actor_id, tenant_id, resource_type,
 			resource_id, ip_address, user_agent, event_data, created_at
 		FROM audit_logs
 		WHERE id = $1
 	`
 
-	var log domain.AuditLog
-	var eventDataJSON []byte
+	var (
+		rawID         googleuuid.UUID
+		rawActorID    *googleuuid.UUID
+		rawTenantID   *googleuuid.UUID
+		rawResourceID *googleuuid.UUID
+		ipAddress     net.IP
+		eventDataJSON []byte
+		log           domain.AuditLog
+	)
 
 	err := a.db.QueryRow(ctx, query, id).Scan(
-		&log.ID, &log.EventType, &log.ActorType, &log.ActorID, &log.TenantID,
-		&log.ResourceType, &log.ResourceID, &log.IPAddress, &log.UserAgent,
+		&rawID, &log.EventType, &log.ActorType, &rawActorID, &rawTenantID,
+		&log.ResourceType, &rawResourceID, &ipAddress, &log.UserAgent,
 		&eventDataJSON, &log.CreatedAt,
 	)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, domain.ErrNotFound
+		}
 		return nil, fmt.Errorf("failed to get audit log by ID %s: %w", id, err)
+	}
+
+	// Convert raw UUIDs to prefixed IDs.
+	auditID, err := prefixid.AuditLogIDFromUUID(uuid.UUID{UUID: rawID})
+	if err != nil {
+		return nil, fmt.Errorf("failed to build audit log ID: %w", err)
+	}
+	log.ID = auditID
+	log.IPAddress = ipAddress
+
+	if rawActorID != nil {
+		log.ActorID = rawActorID.String()
+	}
+
+	if rawTenantID != nil {
+		tid, err := prefixid.TenantIDFromUUID(uuid.UUID{UUID: *rawTenantID})
+		if err != nil {
+			return nil, fmt.Errorf("failed to build tenant ID: %w", err)
+		}
+		log.TenantID = tid
+	}
+
+	if rawResourceID != nil {
+		rid, err := prefixid.ResourceIDFromUUID(uuid.UUID{UUID: *rawResourceID})
+		if err != nil {
+			return nil, fmt.Errorf("failed to build resource ID: %w", err)
+		}
+		log.ResourceID = rid
 	}
 
 	// Unmarshal event data
@@ -93,8 +137,8 @@ func (a *AuditLogRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain
 // ListByTenant lists all audit log entries for a tenant
 func (a *AuditLogRepository) ListByTenant(ctx context.Context, tenantID uuid.UUID, page, pageSize int) ([]*domain.AuditLog, error) {
 	query := `
-		SELECT 
-			id, event_type, actor_type, actor_id, tenant_id, resource_type, 
+		SELECT
+			id, event_type, actor_type, actor_id, tenant_id, resource_type,
 			resource_id, ip_address, user_agent, event_data, created_at
 		FROM audit_logs
 		WHERE tenant_id = $1
@@ -102,14 +146,14 @@ func (a *AuditLogRepository) ListByTenant(ctx context.Context, tenantID uuid.UUI
 		LIMIT $2 OFFSET $3
 	`
 
-	return a.queryAuditLogs(ctx, query, pageSize, tenantID, page*pageSize)
+	return a.queryAuditLogs(ctx, query, pageSize, tenantID, pageSize, page*pageSize)
 }
 
 // ListByUser lists all audit log entries for a user
 func (a *AuditLogRepository) ListByUser(ctx context.Context, userID uuid.UUID, page, pageSize int) ([]*domain.AuditLog, error) {
 	query := `
-		SELECT 
-			id, event_type, actor_type, actor_id, tenant_id, resource_type, 
+		SELECT
+			id, event_type, actor_type, actor_id, tenant_id, resource_type,
 			resource_id, ip_address, user_agent, event_data, created_at
 		FROM audit_logs
 		WHERE actor_type = 'user' AND actor_id = $1
@@ -117,14 +161,14 @@ func (a *AuditLogRepository) ListByUser(ctx context.Context, userID uuid.UUID, p
 		LIMIT $2 OFFSET $3
 	`
 
-	return a.queryAuditLogs(ctx, query, pageSize, userID, page*pageSize)
+	return a.queryAuditLogs(ctx, query, pageSize, userID, pageSize, page*pageSize)
 }
 
 // ListByEventType lists all audit log entries by event type
 func (a *AuditLogRepository) ListByEventType(ctx context.Context, eventType string, page, pageSize int) ([]*domain.AuditLog, error) {
 	query := `
-		SELECT 
-			id, event_type, actor_type, actor_id, tenant_id, resource_type, 
+		SELECT
+			id, event_type, actor_type, actor_id, tenant_id, resource_type,
 			resource_id, ip_address, user_agent, event_data, created_at
 		FROM audit_logs
 		WHERE event_type = $1
@@ -132,35 +176,35 @@ func (a *AuditLogRepository) ListByEventType(ctx context.Context, eventType stri
 		LIMIT $2 OFFSET $3
 	`
 
-	return a.queryAuditLogs(ctx, query, pageSize, eventType, page*pageSize)
+	return a.queryAuditLogs(ctx, query, pageSize, eventType, pageSize, page*pageSize)
 }
 
 // ListByResource lists all audit log entries for a resource
 func (a *AuditLogRepository) ListByResource(ctx context.Context, resourceType string, resourceID uuid.UUID, page, pageSize int) ([]*domain.AuditLog, error) {
 	query := `
-		SELECT 
-			id, event_type, actor_type, actor_id, tenant_id, resource_type, 
+		SELECT
+			id, event_type, actor_type, actor_id, tenant_id, resource_type,
 			resource_id, ip_address, user_agent, event_data, created_at
 		FROM audit_logs
 		WHERE resource_type = $1 AND resource_id = $2
 		ORDER BY created_at DESC
 		LIMIT $3 OFFSET $4
 	`
-	return a.queryAuditLogs(ctx, query, pageSize, resourceType, resourceID, page*pageSize)
+	return a.queryAuditLogs(ctx, query, pageSize, resourceType, resourceID, pageSize, page*pageSize)
 }
 
 // ListByDateRange lists all audit log entries within a date range
 func (a *AuditLogRepository) ListByDateRange(ctx context.Context, startDate, endDate time.Time, page, pageSize int) ([]*domain.AuditLog, error) {
 	query := `
-		SELECT 
-			id, event_type, actor_type, actor_id, tenant_id, resource_type, 
+		SELECT
+			id, event_type, actor_type, actor_id, tenant_id, resource_type,
 			resource_id, ip_address, user_agent, event_data, created_at
 		FROM audit_logs
 		WHERE created_at >= $1 AND created_at <= $2
 		ORDER BY created_at DESC
 		LIMIT $3 OFFSET $4
 	`
-	return a.queryAuditLogs(ctx, query, pageSize, startDate, endDate, page*pageSize)
+	return a.queryAuditLogs(ctx, query, pageSize, startDate, endDate, pageSize, page*pageSize)
 }
 
 // ListByFilters lists audit logs with combined filters
@@ -492,14 +536,23 @@ func (a *AuditLogRepository) ExportToCSV(ctx context.Context, tenantID uuid.UUID
 			ipAddress = log.IPAddress.String()
 		}
 
+		tenantIDStr := ""
+		if log.TenantID != nil {
+			tenantIDStr = log.TenantID.String()
+		}
+		resourceIDStr := ""
+		if log.ResourceID != nil {
+			resourceIDStr = log.ResourceID.String()
+		}
+
 		row := []string{
 			log.ID.String(),
 			log.EventType,
 			log.ActorType,
 			log.ActorID,
-			log.TenantID.String(),
+			tenantIDStr,
 			log.ResourceType,
-			log.ResourceID.String(),
+			resourceIDStr,
 			ipAddress,
 			log.UserAgent,
 			string(eventDataJSON),
@@ -529,15 +582,50 @@ func (a *AuditLogRepository) queryAuditLogs(ctx context.Context, query string, p
 
 	logs := make([]*domain.AuditLog, 0, pageSize)
 	for rows.Next() {
-		var log domain.AuditLog
-		var eventDataJSON []byte
+		var (
+			rawID         googleuuid.UUID
+			rawActorID    *googleuuid.UUID
+			rawTenantID   *googleuuid.UUID
+			rawResourceID *googleuuid.UUID
+			ipAddress     net.IP
+			eventDataJSON []byte
+			log           domain.AuditLog
+		)
 
 		if err := rows.Scan(
-			&log.ID, &log.EventType, &log.ActorType, &log.ActorID, &log.TenantID,
-			&log.ResourceType, &log.ResourceID, &log.IPAddress, &log.UserAgent,
+			&rawID, &log.EventType, &log.ActorType, &rawActorID, &rawTenantID,
+			&log.ResourceType, &rawResourceID, &ipAddress, &log.UserAgent,
 			&eventDataJSON, &log.CreatedAt,
 		); err != nil {
 			return nil, fmt.Errorf("failed to scan audit log data: %w", err)
+		}
+
+		// Convert raw UUIDs to prefixed IDs.
+		auditID, err := prefixid.AuditLogIDFromUUID(uuid.UUID{UUID: rawID})
+		if err != nil {
+			return nil, fmt.Errorf("failed to build audit log ID: %w", err)
+		}
+		log.ID = auditID
+		log.IPAddress = ipAddress
+
+		if rawActorID != nil {
+			log.ActorID = rawActorID.String()
+		}
+
+		if rawTenantID != nil {
+			tid, err := prefixid.TenantIDFromUUID(uuid.UUID{UUID: *rawTenantID})
+			if err != nil {
+				return nil, fmt.Errorf("failed to build tenant ID: %w", err)
+			}
+			log.TenantID = tid
+		}
+
+		if rawResourceID != nil {
+			rid, err := prefixid.ResourceIDFromUUID(uuid.UUID{UUID: *rawResourceID})
+			if err != nil {
+				return nil, fmt.Errorf("failed to build resource ID: %w", err)
+			}
+			log.ResourceID = rid
 		}
 
 		// Unmarshal event data

@@ -173,7 +173,7 @@ func (r *ListAuditLogsReq) Parse() (*ListAuditLogsParams, error) {
 		}
 	}
 
-	endDate := time.Now()
+	endDate := time.Time{}
 	if r.EndDate != nil {
 		endDate, err = time.Parse(time.RFC3339, *r.EndDate)
 		if err != nil {

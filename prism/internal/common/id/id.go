@@ -1,11 +1,11 @@
 package id
 
 import (
+	"encoding/json"
 	"errors"
 	"strings"
 
 	"github.com/jasonKoogler/abraxis/prism/internal/common/uuid"
-	// "github.com/google/uuid"
 )
 
 // ID is the interface for all ID types in the system
@@ -90,6 +90,28 @@ func ParsePrefixedID(value string, expectedPrefix string) (ID, error) {
 
 func (i *PrefixedID) Raw() uuid.UUID {
 	return i.raw
+}
+
+// MarshalJSON serializes the ID as a JSON string (e.g., "aud_<uuid>").
+func (i PrefixedID) MarshalJSON() ([]byte, error) {
+	return json.Marshal(i.value)
+}
+
+// UnmarshalJSON deserializes a JSON string into a PrefixedID.
+func (i *PrefixedID) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return err
+	}
+	parsed, err := ParseID(s)
+	if err != nil {
+		return err
+	}
+	p := parsed.(*PrefixedID)
+	i.raw = p.raw
+	i.value = p.value
+	i.prefix = p.prefix
+	return nil
 }
 
 // String returns the string representation

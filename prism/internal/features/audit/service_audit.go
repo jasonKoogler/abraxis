@@ -164,8 +164,10 @@ func (s *AuditService) ListAuditLogs(ctx context.Context, req *domain.ListAuditL
 		return nil, err
 	}
 
-	// Parse pagination parameters
+	// Parse pagination parameters. ParsePagination returns 1-based page numbers
+	// but all repository methods expect 0-based page indices for OFFSET calculation.
 	page, pageSize := api.ParsePagination(&params.Page, &params.PageSize)
+	repoPage := page - 1
 
 	var logs []*domain.AuditLog
 	var totalCount int
@@ -182,7 +184,7 @@ func (s *AuditService) ListAuditLogs(ctx context.Context, req *domain.ListAuditL
 			params.ResourceID.Raw(),
 			params.StartDate,
 			params.EndDate,
-			page,
+			repoPage,
 			pageSize,
 		)
 		if err != nil {
@@ -204,7 +206,7 @@ func (s *AuditService) ListAuditLogs(ctx context.Context, req *domain.ListAuditL
 		}
 	} else if !params.StartDate.IsZero() || !params.EndDate.Equal(time.Time{}) {
 		// Date range filter
-		logs, err = s.auditRepo.ListByDateRange(ctx, params.StartDate, params.EndDate, page, pageSize)
+		logs, err = s.auditRepo.ListByDateRange(ctx, params.StartDate, params.EndDate, repoPage, pageSize)
 		if err != nil {
 			return nil, err
 		}
@@ -213,7 +215,7 @@ func (s *AuditService) ListAuditLogs(ctx context.Context, req *domain.ListAuditL
 		totalCount = len(logs)
 	} else if params.TenantID != nil {
 		// Filter by tenant
-		logs, err = s.auditRepo.ListByTenant(ctx, params.TenantID.Raw(), page, pageSize)
+		logs, err = s.auditRepo.ListByTenant(ctx, params.TenantID.Raw(), repoPage, pageSize)
 		if err != nil {
 			return nil, err
 		}
@@ -223,7 +225,7 @@ func (s *AuditService) ListAuditLogs(ctx context.Context, req *domain.ListAuditL
 		}
 	} else if params.UserID != nil {
 		// Filter by user
-		logs, err = s.auditRepo.ListByUser(ctx, params.UserID.Raw(), page, pageSize)
+		logs, err = s.auditRepo.ListByUser(ctx, params.UserID.Raw(), repoPage, pageSize)
 		if err != nil {
 			return nil, err
 		}
@@ -233,7 +235,7 @@ func (s *AuditService) ListAuditLogs(ctx context.Context, req *domain.ListAuditL
 		}
 	} else if params.EventType != "" {
 		// Filter by event type
-		logs, err = s.auditRepo.ListByEventType(ctx, params.EventType, page, pageSize)
+		logs, err = s.auditRepo.ListByEventType(ctx, params.EventType, repoPage, pageSize)
 		if err != nil {
 			return nil, err
 		}
@@ -247,7 +249,7 @@ func (s *AuditService) ListAuditLogs(ctx context.Context, req *domain.ListAuditL
 			ctx,
 			params.ResourceType,
 			params.ResourceID.Raw(),
-			page,
+			repoPage,
 			pageSize,
 		)
 		if err != nil {
