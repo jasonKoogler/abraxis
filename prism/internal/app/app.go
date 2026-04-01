@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
@@ -191,12 +192,32 @@ func (a *App) Start() error {
 		a.logger.Info("Service discovery watcher started")
 	}
 
-	// Register feature API routes
-	if a.auditService != nil {
-		RegisterAuditRoutes(a.srv.GetRouter(), a.auditService, a.cfg, a.logger)
-	}
-	if a.apiKeyService != nil {
-		RegisterApiKeyRoutes(a.srv.GetRouter(), a.apiKeyService, a.cfg, a.logger)
+	// Register feature API routes — protect with auth middleware when available.
+	if a.tokenValidator != nil {
+		// Build auth options
+		var featureAuthOpts []auth.AuthMiddlewareOption
+		if a.aegisClient != nil {
+			featureAuthOpts = append(featureAuthOpts, auth.WithRevocationChecker(a.aegisClient))
+		}
+		authMW := auth.NewAuthMiddleware(a.tokenValidator, featureAuthOpts...)
+
+		a.srv.GetRouter().Group(func(r chi.Router) {
+			r.Use(authMW.Authenticate)
+			if a.auditService != nil {
+				RegisterAuditRoutes(r, a.auditService, a.cfg, a.logger)
+			}
+			if a.apiKeyService != nil {
+				RegisterApiKeyRoutes(r, a.apiKeyService, a.cfg, a.logger)
+			}
+		})
+	} else {
+		// No auth available (standalone/test mode) — register without middleware
+		if a.auditService != nil {
+			RegisterAuditRoutes(a.srv.GetRouter(), a.auditService, a.cfg, a.logger)
+		}
+		if a.apiKeyService != nil {
+			RegisterApiKeyRoutes(a.srv.GetRouter(), a.apiKeyService, a.cfg, a.logger)
+		}
 	}
 
 	// Swagger UI
