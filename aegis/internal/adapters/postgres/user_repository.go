@@ -2,9 +2,11 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jasonKoogler/abraxis/aegis/internal/common/db"
 	"github.com/jasonKoogler/abraxis/aegis/internal/domain"
 	"github.com/jasonKoogler/abraxis/aegis/internal/ports"
@@ -91,6 +93,9 @@ func (ur *UserRepository) GetByEmail(ctx context.Context, email string) (*domain
 		&user.CreatedAt, &user.UpdatedAt,
 	)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, fmt.Errorf("failed to query user with email %s: %w", email, err)
 	}
 

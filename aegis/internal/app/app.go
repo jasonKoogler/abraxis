@@ -118,7 +118,7 @@ func (a *App) Start() error {
 	a.srv.GetRouter().Use(chimiddleware.RequestID)
 	a.srv.GetRouter().Use(chimiddleware.RealIP)
 	a.srv.GetRouter().Use(chimiddleware.Recoverer)
-	a.srv.GetRouter().Use(chimiddleware.Logger)
+	a.srv.GetRouter().Use(log.NewHTTPLogger(a.logger))
 
 	// Register auth + user API routes directly on chi with auth middleware grouping.
 	httpServer := adaptersHTTP.NewServer(a.authService, a.userService, a.cfg, a.logger)
@@ -175,10 +175,12 @@ func (a *App) Shutdown(ctx context.Context) error {
 }
 
 // createCorsMiddleware creates and returns a CORS middleware handler if CORS is configured.
+// When no allowed origins are set it returns a pass-through middleware so that
+// chi.Use never receives a nil handler.
 func createCorsMiddleware(cfg *config.Config) func(http.Handler) http.Handler {
 	corsOrigins := cfg.HTTPServer.CORS.AllowedOrigins
 	if corsOrigins == "" {
-		return nil
+		return func(next http.Handler) http.Handler { return next }
 	}
 	allowedOrigins := strings.Split(corsOrigins, ";")
 	corsHandler := cors.New(cors.Options{

@@ -101,12 +101,12 @@ func RespondWithError(err error, w http.ResponseWriter, r *http.Request) {
 	}
 
 	logEntry := log.GetLogEntry(r).With(
-		log.Field{Key: "slug", String: apiErr.Slug},
-		log.Field{Key: "status_code", Integer: int64(apiErr.StatusCode)},
+		log.String("slug", apiErr.Slug),
+		log.Int64("status_code", int64(apiErr.StatusCode)),
 	)
 
 	if apiErr.internalError != nil {
-		logEntry = logEntry.With(log.Field{Key: "internal_error", String: apiErr.internalError.Error()})
+		logEntry = logEntry.With(log.String("internal_error", apiErr.internalError.Error()))
 	}
 
 	logEntry.Warn(apiErr.Message)
